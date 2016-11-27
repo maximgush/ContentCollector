@@ -10,7 +10,8 @@ using System.Xml.Serialization;
 
 namespace ContentCollector
 {
-    class cBuild
+    [XmlRoot("cBuild")]
+    public class cBuild
     {
         private static cBuild m_instance = new cBuild();
         public  static cBuild Instance() { return m_instance;}
@@ -19,28 +20,90 @@ namespace ContentCollector
         
         private string m_svnURL = "";
         private int m_lastRevision = -1;
-        
+
         private Dictionary<string, IContentEntity> m_contentDictionary = new Dictionary<string, IContentEntity>();
         private List<IContentEntity> m_queryContentEntitiesToParse = new List<IContentEntity>();
+
+        [XmlArrayItem("UserInput_Mouse", Type = typeof(сTestEvent_UserInput_Mouse))]
+        [XmlArrayItem("UserInput_Keyboard", Type = typeof(сTestEvent_UserInput_Keyboard))]
+        [XmlArrayItem("ExecuteScript", Type = typeof(сTestEvent_ExecuteScript))]
+        [XmlArrayItem("ProgramMessage", Type = typeof(сTestEvent_ProgramMessage_Info))]
+        public List<cTestEvent> Events {
+            get
+            {
+                List<cTestEvent> events = new List<cTestEvent>();
+                events.Add(new сTestEvent_UserInput_Mouse());
+                events.Add(new сTestEvent_ExecuteScript());
+                return events;
+
+            }
+        }
+
+//         [XmlArray]
+//         [XmlArrayItem("cContentEntityGameTypesIni", Type = typeof(cContentEntityGameTypesIni))]
+//         [XmlArrayItem("cContentEntitySimple", Type = typeof(cContentEntitySimple))]
+//         public List<cContentEntitySimple> Entities
+//         {
+//             get
+//             {
+//                 List<cContentEntitySimple> events = new List<cContentEntitySimple>();
+//                 events.Add(new cContentEntitySimple());
+//                 return events;
+// 
+//             }
+//         }
+
+//          [XmlArrayItem("cContentEntityGameTypesIni", Type = typeof(cContentEntityGameTypesIni))]
+//          [XmlArrayItem("cContentEntityPlayerCar", Type = typeof(cContentEntityPlayerCar))]
+//          public List<cContentEntityGameTypesIni> ToSerialize
+//          {
+//              get
+//              {
+//                  List<cContentEntityGameTypesIni> toSerialize = new List<cContentEntityGameTypesIni>();
+//                  toSerialize.Add(new cContentEntityGameTypesIni());
+//                  return toSerialize;
+//              }
+//          }
+
+/*        public class ContentDictionaryItem
+        {
+            [XmlAttribute]
+            public string Name;
+            
+            [XmlArrayItem("cContentEntityGameTypesIni", Type = typeof(cContentEntityGameTypesIni))]
+            [XmlArrayItem("cContentEntityPlayerCar", Type = typeof(cContentEntityPlayerCar))]
+            public IContentEntity Entity;
+
+            //[XmlAttribute]
+            //public String Entity;
+        }
+
+        [XmlArrayItem("cContentEntityGameTypesIni", Type = typeof(cContentEntityGameTypesIni))]
+        [XmlArrayItem("cContentEntityPlayerCar", Type = typeof(cContentEntityPlayerCar))]
+        public Dictionary<string, IContentEntity> Content
+        {
+            get { return m_contentDictionary; }
+        }
+ */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void AddRootContentEntity()
         {
-            AddContentEntity(eContentEntityTypes.cetGameTypesIni, "GameType.ini", "GameType.ini", null, true);
+            AddContentEntity(typeof(cContentEntitySimple), "GameType.ini", "GameType.ini", null, true);
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public void AddContentEntity(eContentEntityTypes contentType, string name, string fileName, IContentEntity parent, bool isRoot = false)
-        {
+        public void AddContentEntity(System.Type entityType, string name, string fileName, IContentEntity parent, bool isRoot = false)
+        {            
             if (m_contentDictionary.ContainsKey(name))
             {
                 IContentEntity entity = m_contentDictionary[name];
-                if (entity.EntityType != contentType)
+                if (entity.GetType() != entityType)
                     MessageBox.Show("Элемент с таким именем уже существует под другим типом!");
 
                 entity.AddParentContentEntity(parent);
             }
             else
             {
-                IContentEntity entity = сFactoryContentEntity.Create(contentType);
+                IContentEntity entity = (IContentEntity)Activator.CreateInstance(entityType);
                 entity.Name = name;
                 entity.FileName = fileName;
                 entity.AddParentContentEntity(parent);
@@ -122,18 +185,26 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void Serialize(string xmlFileName)
         {
-            var ser = new XmlSerializer(typeof(cBuild));
             StreamWriter stream = new StreamWriter(xmlFileName);
-            ser.Serialize(stream, this);
+
+            var serializer = new XmlSerializer(typeof(cBuild));                       
+            serializer.Serialize(stream, this);
+/*
+            var serializer2 = new XmlSerializer(typeof(List<String>));
+            serializer2.Serialize(stream, ToSerialize);
+
+            XmlSerializer serializer = new XmlSerializer(typeof(ContentDictionaryItem[]), new XmlRootAttribute() { ElementName = "ContentDictionaryItems" });
+            serializer.Serialize(stream, m_contentDictionary.Select(kv => new ContentDictionaryItem() { Name = kv.Key, Entity = kv.Value }).ToArray());
+*/
             stream.Close();
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void Deserialize(string xmlFileName)
         {            
             StreamReader stream = new StreamReader(xmlFileName);
-            XmlSerializer serializer = new XmlSerializer(typeof(cBuild));
-            cBuild wrapper = (cBuild)serializer.Deserialize(stream);
-            this.m_contentDictionary = wrapper.m_contentDictionary;
+            //XmlSerializer serializer = new XmlSerializer(typeof(ContentDictionaryItem[]), new XmlRootAttribute() { ElementName = "ContentDictionaryItems" });
+          //  m_contentDictionary = ((ContentDictionaryItem[])serializer.Deserialize(stream)).ToDictionary(i => i.Name, i => i.Entity);
+
             stream.Close();
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

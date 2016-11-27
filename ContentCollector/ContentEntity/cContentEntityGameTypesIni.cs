@@ -4,19 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace ContentCollector
 {
-    public class cContentEntityN2 : cContentEntitySimple
+    public class cContentEntityGameTypesIni : cContentEntitySimple
     {
+        public cContentEntityGameTypesIni()
+        {
+        }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse()
-        {
+        {            
             // TODO:
-            // Парсим n2-файлы, вытаскиваем оттуда текстурки
-            // Проверяем доступные языковые ассоциации
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    }   // cContentEntityN2
+    }   // сContentEntityPlayerCar
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }   // сContentCollector

@@ -12,6 +12,9 @@ namespace ContentCollector
         {
             cBuild build = new cBuild();
 
+            build.Rebuild();
+
+            build.Serialize(@"test.xml");
             //build.Update();
 
         }

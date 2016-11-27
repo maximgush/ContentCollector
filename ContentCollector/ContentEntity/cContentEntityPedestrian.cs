@@ -7,12 +7,8 @@ using System.Collections.Generic;
 
 namespace ContentCollector
 {
-    class cContentEntityPedestrian : cContentEntitySimple
+    public class cContentEntityPedestrian : cContentEntitySimple
     {
-        public cContentEntityPedestrian()
-        {
-            EntityType = eContentEntityTypes.cetPedestrian;
-        }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse()
         {
@@ -24,7 +20,7 @@ namespace ContentCollector
 //              n2_search.main(r, global_config.app_dir + 'export//gfxlib//characters//pedestrians//' + n + '//human.n2', languages, lang_associations)
 
             // human.n2
-            cBuild.Instance().AddContentEntity(eContentEntityTypes.cetN2, Name + @"_human.n2", @"export/gfxlib/characters/pedestrians/" + Name + @"/human.n2", this);
+            //cBuild.Instance().AddContentEntity(eContentEntityTypes.cetN2, Name + @"_human.n2", @"export/gfxlib/characters/pedestrians/" + Name + @"/human.n2", this);
 
 
             // TODO:

@@ -43,18 +43,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="cBuild.cs" />
-    <Compile Include="ContentEntity\cContentEntityCarPhysics.cs" />
-    <Compile Include="ContentEntity\cContentEntityCarProperty.cs" />
-    <Compile Include="ContentEntity\cContentEntityDevice.cs" />
-    <Compile Include="ContentEntity\cContentEntityMission.cs" />
-    <Compile Include="ContentEntity\cContentEntityN2.cs" />
-    <Compile Include="ContentEntity\cContentEntityPedestrian.cs" />
-    <Compile Include="ContentEntity\cContentEntityPlayerCar.cs" />
     <Compile Include="ContentEntity\cContentEntitySimple.cs" />
+    <Compile Include="ContentEntity\cTestEvent.cs" />
     <Compile Include="ContentEntity\IContentEntity.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="сFactoryContentEntity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

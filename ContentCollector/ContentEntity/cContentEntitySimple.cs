@@ -8,45 +8,46 @@ using System.Xml.Serialization;
 
 namespace ContentCollector
 {
-    class cContentEntitySimple : IContentEntity
+    public class cContentEntitySimple : IContentEntity
     {
-        [XmlAttribute]
         private string m_name = "";
 
-        [XmlAttribute]
         private string m_fileName = "";
 
-        [XmlAttribute]
-        private eContentEntityTypes m_entityType = eContentEntityTypes.cetSimple;
-        
-        private bool m_isRoot;
+        private bool m_isRoot = false;
 
         private List<IContentEntity> m_childContentEntities = new List<IContentEntity>();
         private List<IContentEntity> m_parentContentEntities = new List<IContentEntity>();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public cContentEntitySimple()
         {
-            m_entityType = eContentEntityTypes.cetSimple;
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        [XmlAttribute]
         public string Name
         {
             get { return m_name; } 
             set { m_name = value;}
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        [XmlAttribute]
         public string FileName
          {
             get { return m_fileName; } 
             set { m_fileName = value;}
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public eContentEntityTypes EntityType
+        public List<IContentEntity> ParentContentEntities
         {
-            get { return m_entityType; }
-            set { m_entityType = value; }
+            get { return m_parentContentEntities; } 
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public List<IContentEntity> ChildContentEntities
+        {
+            get { return m_childContentEntities; }
+        }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        [XmlAttribute]
         public bool IsRoot
         {
             get { return m_isRoot; }

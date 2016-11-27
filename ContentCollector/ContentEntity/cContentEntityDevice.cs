@@ -7,12 +7,8 @@ using System.Collections.Generic;
 
 namespace ContentCollector
 {
-    class cContentEntityDevice : cContentEntitySimple
+    public class cContentEntityDevice : cContentEntitySimple
     {
-        public cContentEntityDevice()
-        {
-            EntityType = eContentEntityTypes.cetDevice;
-        }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse()
         {
@@ -30,15 +26,15 @@ namespace ContentCollector
 
             // device.ini
             fileName = @"data/physics/devices/Device" + Name + @"/device.ini";
-            cBuild.Instance().AddContentEntity(eContentEntityTypes.cetSimple, fileName, fileName, this);
+            //cBuild.Instance().AddContentEntity(eContentEntityTypes.cetSimple, fileName, fileName, this);
 
             // device_p.hkx
             fileName = @"export/meshes/devices/Device" + Name + @"/device_p.hkx";
-            cBuild.Instance().AddContentEntity(eContentEntityTypes.cetSimple, fileName, fileName, this);
+            //cBuild.Instance().AddContentEntity(eContentEntityTypes.cetSimple, fileName, fileName, this);
 
             // device.n2
             fileName = @"export/meshes/devices/Device" + Name + @"/device.n2";
-            cBuild.Instance().AddContentEntity(eContentEntityTypes.cetN2, fileName, fileName, this);
+            //cBuild.Instance().AddContentEntity(eContentEntityTypes.cetN2, fileName, fileName, this);
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }   // cContentEntityDevice

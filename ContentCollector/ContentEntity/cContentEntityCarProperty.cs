@@ -7,12 +7,8 @@ using System.Collections.Generic;
 
 namespace ContentCollector
 {
-    class cContentEntityCarProperty : cContentEntitySimple
+    public class cContentEntityCarProperty : cContentEntitySimple
     {
-        public cContentEntityCarProperty()
-        {
-            EntityType = eContentEntityTypes.cetCarPropretyINI;
-        }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse()
         {

@@ -7,33 +7,13 @@ using System.Threading.Tasks;
 namespace ContentCollector
 {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    enum eContentEntityTypes
-    {
-        cetSimple,
-
-        cetPlayerCar,
-        cetTrafficCar,
-        cetCarPropretyINI,
-        cetCarPhysicsSetupINI,
-        cetCarTuningXML,
-
-        cetDevice,
-
-        cetPedestrian,
-
-        cetN2,
-
-        cetLocation,
-        cetMission,
-        cetGameTypesIni
-    }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    interface IContentEntity
+    public interface IContentEntity
     {
         string Name     { get; set;}
         string FileName { get; set;}
-        eContentEntityTypes EntityType { get; set; }
-        bool    IsRoot { get; set; }
+        bool   IsRoot { get; set; }
+        List<IContentEntity> ParentContentEntities { get; }
+        List<IContentEntity> ChildContentEntities { get; }
 
         void    AddChildContentEntity(IContentEntity entity);
         void    RemoveChildContentEntity(IContentEntity entity);
