@@ -4,50 +4,88 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Xml;
 
 namespace ContentCollector
 {
     public class cContentEntityMission : cContentEntitySimple
     {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public override void Parse()
+        public override void Parse(cBuild build)
         {
-//          AUTOMATION
-//         file.write ("data/physics/devices/Device" + number + "/device.ini" + "\n")
-//         file.write ("export/meshes/devices/Device" + number + "/device_p.hkx" + "\n")
-//         file.write ("export/gfxlib/devices/Device" + number + "/device.n2" + "\n")
-//         n2_search.main(file, global_config.app_dir + "export/gfxlib/devices/Device" + number + "/device.n2", languages, lang_associations)
-//         
-//         addIni = "data/gamedata/devices/Device" + number + "/device.ini"
-//         if os.path.exists(global_config.app_dir + addIni):
-//             file.write (addIni + "\n") 
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(this.FileName);
 
-            // TODO:
-            // Распарсить mission.xml
+            #region lua-script
+            foreach (XmlNode node in xmlDoc.GetElementsByTagName("LuaScript"))
+            {
+                if (node.Attributes != null && node.Attributes["File"] != null)
+                    build.AddContentEntity(typeof(cContentEntitySimple), node.Attributes["File"].Value, node.Attributes["File"].Value, this);
+            }
+            #endregion    
 
-            // lua-script
-            //cBuild.Instance().AddContentEntity(eContentEntityTypes.cetSimple, , , this);
+            #region ActiveZones
+            foreach (XmlNode node in xmlDoc.GetElementsByTagName("ActiveZones"))
+            {
+                if (node.Attributes != null && node.Attributes["File"] != null)
+                    build.AddContentEntity(typeof(cContentEntitySimple), node.Attributes["File"].Value, node.Attributes["File"].Value, this);
+            }
+            #endregion
 
-            // rulesControl.lua
-            //cBuild.Instance().AddContentEntity(eContentEntityTypes.cetSimple, , , , this);
+            #region Tips
+            foreach (XmlNode node in xmlDoc.GetElementsByTagName("Tip"))
+            {
+                if (node.Attributes != null && node.Attributes["File"] != null)
+                    build.AddContentEntity(typeof(cContentEntitySimple), node.Attributes["File"].Value, node.Attributes["File"].Value, this);
+            }
+            #endregion
 
-            // Video
-            //cBuild.Instance().AddContentEntity(eContentEntityTypes.cetSimple, , , this);
+            #region RulesControl
+            foreach (XmlNode node in xmlDoc.GetElementsByTagName("Task"))
+            {
+                if (node.Attributes != null && node.Attributes["RulesControl"] != null)
+                {
+                    string devices = node.Attributes["RulesControl"].Value;
+                    build.AddContentEntity(typeof(cContentEntityDevice), node.Attributes["RulesControl"].Value, node.Attributes["RulesControl"].Value, this);
+                }
+            }
+            #endregion 
 
-            // ActiveZones
-            //cBuild.Instance().AddContentEntity(eContentEntityTypes.cetSimple, , , this);
+            #region Video
+            foreach (XmlNode node in xmlDoc.GetElementsByTagName("Video"))
+            {
+                if (node.Attributes != null && node.Attributes["File"] != null)
+                    build.AddContentEntity(typeof(cContentEntitySimple), node.Attributes["File"].Value, node.Attributes["File"].Value, this);
+            }
+            #endregion
 
-            // Locations
-            // cBuild.Instance().AddContentEntity(eContentEntityTypes.cetLocation, , , this);
+            #region Locations
+            string cityName = null;
+            foreach (XmlNode node in xmlDoc.GetElementsByTagName("Locations"))
+            {
+                if (node.Attributes != null && node.Attributes["CityName"] != null)
+                    cityName = node.Attributes["CityName"].Value;
+            }
 
-            // CarModel
-            // cBuild.Instance().AddContentEntity(eContentEntityTypes.cetPlayerCar, , , this);
+            foreach (XmlNode node in xmlDoc.GetElementsByTagName("Location"))
+            {
+                if (node.Attributes != null)
+                    build.AddContentEntity(typeof(cContentEntityLocation), cityName + "\\" + node.InnerText, null, this);
+            }
+            #endregion
 
-            // Device
-            // cBuild.Instance().AddContentEntity(eContentEntityTypes.cetDevice, , , this);
-
-
-            // TODO:
+            #region Devices
+            foreach (XmlNode node in xmlDoc.GetElementsByTagName("Mission"))
+            {
+                if (node.Attributes != null && node.Attributes["device"] != null)
+                {
+                    string devices = node.Attributes["device"].Value;
+                    string[] deviceArrayStrings = devices.Split(',');
+                    foreach (string device in deviceArrayStrings)
+                        build.AddContentEntity(typeof(cContentEntityDevice), device, null, this);
+                }                    
+            }
+            #endregion 
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }   // cContentEntityMission

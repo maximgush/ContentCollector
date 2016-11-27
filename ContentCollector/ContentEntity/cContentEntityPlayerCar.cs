@@ -10,7 +10,7 @@ namespace ContentCollector
     public class cContentEntityPlayerCar : cContentEntitySimple
     {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public override void Parse()
+        public override void Parse(cBuild build)
         {
             // CarProperty
 //            cBuild.Instance().AddContentEntity(typeof(cContentEntityCarProperty), Name + @"_CarProperty.ini", @"data/gamedata/cars/Car" + Name + @"\CarProperty.ini", this);

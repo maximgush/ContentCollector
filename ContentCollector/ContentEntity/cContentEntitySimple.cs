@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using System.Xml.Serialization;
 
 namespace ContentCollector
 {
-    public class cContentEntitySimple : IContentEntity
+    public class cContentEntitySimple
     {
         private string m_name = "";
 
@@ -16,8 +17,8 @@ namespace ContentCollector
 
         private bool m_isRoot = false;
 
-        private List<IContentEntity> m_childContentEntities = new List<IContentEntity>();
-        private List<IContentEntity> m_parentContentEntities = new List<IContentEntity>();
+        private List<cContentEntitySimple> m_childContentEntities = new List<cContentEntitySimple>();
+        private List<cContentEntitySimple> m_parentContentEntities = new List<cContentEntitySimple>();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public cContentEntitySimple()
         {
@@ -37,14 +38,22 @@ namespace ContentCollector
             set { m_fileName = value;}
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public List<IContentEntity> ParentContentEntities
+        public List<string> ParentContentEntities
         {
-            get { return m_parentContentEntities; } 
+            get
+            {
+                List<string> parents = new List<string>(m_parentContentEntities.Select(elem => elem.Name).ToArray());
+                return parents;
+            } 
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public List<IContentEntity> ChildContentEntities
+        public List<string> ChildContentEntities
         {
-            get { return m_childContentEntities; }
+            get
+            {
+                List<string> childs = new List<string>(m_childContentEntities.Select(elem => elem.Name).ToArray());
+                return childs;
+            } 
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         [XmlAttribute]
@@ -54,15 +63,15 @@ namespace ContentCollector
             set { m_isRoot = value; }
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public void AddChildContentEntity(IContentEntity entity)    { m_childContentEntities.Add(entity); }
-        public void RemoveChildContentEntity(IContentEntity entity) { m_childContentEntities.RemoveAll(entity.Equals); }
+        public void AddChildContentEntity(cContentEntitySimple entity)    { m_childContentEntities.Add(entity); }
+        public void RemoveChildContentEntity(cContentEntitySimple entity) { m_childContentEntities.RemoveAll(entity.Equals); }
 
-        public void AddParentContentEntity(IContentEntity entity) { m_parentContentEntities.Add(entity); }
-        public void RemoveParentContentEntity(IContentEntity entity) { m_parentContentEntities.RemoveAll(entity.Equals); }
+        public void AddParentContentEntity(cContentEntitySimple entity) { m_parentContentEntities.Add(entity); }
+        public void RemoveParentContentEntity(cContentEntitySimple entity) { m_parentContentEntities.RemoveAll(entity.Equals); }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void RemoveYouselfFromChildContentEntities()
         {
-            foreach (IContentEntity entity in m_childContentEntities)
+            foreach (cContentEntitySimple entity in m_childContentEntities)
             {
                 entity.RemoveParentContentEntity(this);
             }
@@ -71,7 +80,7 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void RemoveYouselfFromParentContentEntities()
         {
-            foreach (IContentEntity entity in m_parentContentEntities)
+            foreach (cContentEntitySimple entity in m_parentContentEntities)
             {
                 entity.RemoveChildContentEntity(this);
             }
@@ -80,7 +89,7 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public bool HasParentEntities() { return m_parentContentEntities.Count > 0; }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public virtual void Parse() {}
+        public virtual void Parse(cBuild build) {}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void Serialize() { /* TODO */ }
         public void DeSerialize() { /* TODO */ }

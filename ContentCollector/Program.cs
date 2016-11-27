@@ -12,11 +12,14 @@ namespace ContentCollector
         {
             cBuild build = new cBuild();
 
+            build.AddRootContentEntity(typeof(cContentEntityGameTypesIni), "GameTypeIni", @"E:\Programming\Forward_Development\ContentCollector\Project\GameType.ini");
+            build.ProductInternalName = "CATEGORY_C_EX";
+            build.ProjectPath = @"E:\Programming\Forward_Development\ContentCollector\Project";
+
             build.Rebuild();
 
             build.Serialize(@"test.xml");
             //build.Update();
-
         }
     }
 }

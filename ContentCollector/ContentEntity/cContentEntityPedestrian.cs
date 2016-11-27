@@ -10,7 +10,7 @@ namespace ContentCollector
     public class cContentEntityPedestrian : cContentEntitySimple
     {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public override void Parse()
+        public override void Parse(cBuild build)
         {
 //          AUTOMATION
 //          dom = xml.dom.minidom.parse(global_config.app_dir + "data\\config\\traffic_cars.xml")

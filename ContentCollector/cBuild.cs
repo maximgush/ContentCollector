@@ -13,89 +13,54 @@ namespace ContentCollector
     [XmlRoot("cBuild")]
     public class cBuild
     {
-        private static cBuild m_instance = new cBuild();
-        public  static cBuild Instance() { return m_instance;}
+        private string mProjectPath = "";        
+        private string mRepositoryURL = "";
+        private int mLastBuildRevision = -1;
+        private string mProductInternalName = "";
 
-        private string m_projectPath = "";
-        
-        private string m_svnURL = "";
-        private int m_lastRevision = -1;
+        private cContentEntitySimple mRootEntity = null;
 
-        private Dictionary<string, IContentEntity> m_contentDictionary = new Dictionary<string, IContentEntity>();
-        private List<IContentEntity> m_queryContentEntitiesToParse = new List<IContentEntity>();
+        private Dictionary<string, cContentEntitySimple> mContentDictionary = new Dictionary<string, cContentEntitySimple>();
+        private List<cContentEntitySimple> mQueryContentEntitiesToParse = new List<cContentEntitySimple>();
 
-        [XmlArrayItem("UserInput_Mouse", Type = typeof(сTestEvent_UserInput_Mouse))]
-        [XmlArrayItem("UserInput_Keyboard", Type = typeof(сTestEvent_UserInput_Keyboard))]
-        [XmlArrayItem("ExecuteScript", Type = typeof(сTestEvent_ExecuteScript))]
-        [XmlArrayItem("ProgramMessage", Type = typeof(сTestEvent_ProgramMessage_Info))]
-        public List<cTestEvent> Events {
-            get
-            {
-                List<cTestEvent> events = new List<cTestEvent>();
-                events.Add(new сTestEvent_UserInput_Mouse());
-                events.Add(new сTestEvent_ExecuteScript());
-                return events;
+        public string ProjectPath { get { return mProjectPath; } set { mProjectPath = value; } }
+        public string RepositoryURL { get { return mRepositoryURL; } }
+        public int LastBuildRevision { get { return mLastBuildRevision; } }
+        public string ProductInternalName { get { return mProductInternalName; } set { mProductInternalName = value; }}
 
-            }
-        }
 
-//         [XmlArray]
-//         [XmlArrayItem("cContentEntityGameTypesIni", Type = typeof(cContentEntityGameTypesIni))]
-//         [XmlArrayItem("cContentEntitySimple", Type = typeof(cContentEntitySimple))]
-//         public List<cContentEntitySimple> Entities
-//         {
-//             get
-//             {
-//                 List<cContentEntitySimple> events = new List<cContentEntitySimple>();
-//                 events.Add(new cContentEntitySimple());
-//                 return events;
-// 
-//             }
-//         }
-
-//          [XmlArrayItem("cContentEntityGameTypesIni", Type = typeof(cContentEntityGameTypesIni))]
-//          [XmlArrayItem("cContentEntityPlayerCar", Type = typeof(cContentEntityPlayerCar))]
-//          public List<cContentEntityGameTypesIni> ToSerialize
-//          {
-//              get
-//              {
-//                  List<cContentEntityGameTypesIni> toSerialize = new List<cContentEntityGameTypesIni>();
-//                  toSerialize.Add(new cContentEntityGameTypesIni());
-//                  return toSerialize;
-//              }
-//          }
-
-/*        public class ContentDictionaryItem
-        {
-            [XmlAttribute]
-            public string Name;
-            
-            [XmlArrayItem("cContentEntityGameTypesIni", Type = typeof(cContentEntityGameTypesIni))]
-            [XmlArrayItem("cContentEntityPlayerCar", Type = typeof(cContentEntityPlayerCar))]
-            public IContentEntity Entity;
-
-            //[XmlAttribute]
-            //public String Entity;
-        }
-
+        [XmlArrayItem("cContentEntitySimple", Type = typeof(cContentEntitySimple))]
         [XmlArrayItem("cContentEntityGameTypesIni", Type = typeof(cContentEntityGameTypesIni))]
         [XmlArrayItem("cContentEntityPlayerCar", Type = typeof(cContentEntityPlayerCar))]
-        public Dictionary<string, IContentEntity> Content
+        [XmlArrayItem("cContentEntityMission", Type = typeof(cContentEntityMission))]
+        [XmlArrayItem("cContentEntityLocation", Type = typeof(cContentEntityLocation))]
+        public List<cContentEntitySimple> Entities
         {
-            get { return m_contentDictionary; }
-        }
- */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public void AddRootContentEntity()
-        {
-            AddContentEntity(typeof(cContentEntitySimple), "GameType.ini", "GameType.ini", null, true);
-        }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public void AddContentEntity(System.Type entityType, string name, string fileName, IContentEntity parent, bool isRoot = false)
-        {            
-            if (m_contentDictionary.ContainsKey(name))
+            get
             {
-                IContentEntity entity = m_contentDictionary[name];
+                List<cContentEntitySimple> entities = new List<cContentEntitySimple>();
+                foreach (var pair_name_entity in mContentDictionary)
+                {
+                    entities.Add(pair_name_entity.Value);
+                }
+
+                return entities;
+            }
+        }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public void AddRootContentEntity(System.Type entityType, string name, string fileName)
+        {
+            mRootEntity = (cContentEntitySimple)Activator.CreateInstance(entityType);
+            mRootEntity.Name = name;
+            mRootEntity.FileName = fileName;
+            mRootEntity.IsRoot = true;
+        }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public void AddContentEntity(System.Type entityType, string name, string fileName, cContentEntitySimple parent, bool isRoot = false)
+        {            
+            if (mContentDictionary.ContainsKey(name))
+            {
+                cContentEntitySimple entity = mContentDictionary[name];
                 if (entity.GetType() != entityType)
                     MessageBox.Show("Элемент с таким именем уже существует под другим типом!");
 
@@ -103,23 +68,24 @@ namespace ContentCollector
             }
             else
             {
-                IContentEntity entity = (IContentEntity)Activator.CreateInstance(entityType);
+                cContentEntitySimple entity = (cContentEntitySimple)Activator.CreateInstance(entityType);
                 entity.Name = name;
-                entity.FileName = fileName;
+                entity.FileName = fileName != null ? ProjectPath + "\\" + fileName : null;
                 entity.AddParentContentEntity(parent);
+                parent.AddChildContentEntity(entity);
                 entity.IsRoot = isRoot;
                 
-                m_contentDictionary.Add(entity.Name, entity);
-                m_queryContentEntitiesToParse.Add(entity);
+                mContentDictionary.Add(entity.Name, entity);
+                mQueryContentEntitiesToParse.Add(entity);
             }
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void RemoveContentEntity(string name)
         {
-            IContentEntity entity = m_contentDictionary[name];
+            cContentEntitySimple entity = mContentDictionary[name];
             entity.RemoveYouselfFromChildContentEntities();
             entity.RemoveYouselfFromParentContentEntities();
-            m_contentDictionary.Remove(name);
+            mContentDictionary.Remove(name);
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void Update(string[] changedFiles)
@@ -130,12 +96,12 @@ namespace ContentCollector
 
             foreach (var changingFileName in changedFiles)
             {
-                string changingFileNameRelative = changingFileName.Substring(m_projectPath.Length);
-                if (m_contentDictionary.ContainsKey(changingFileNameRelative))
+                string changingFileNameRelative = changingFileName.Substring(mProjectPath.Length);
+                if (mContentDictionary.ContainsKey(changingFileNameRelative))
                 {
-                    IContentEntity entity = m_contentDictionary[changingFileNameRelative];
+                    cContentEntitySimple entity = mContentDictionary[changingFileNameRelative];
                     entity.RemoveYouselfFromChildContentEntities();
-                    m_queryContentEntitiesToParse.Add(entity);
+                    mQueryContentEntitiesToParse.Add(entity);
                 }
             }
 
@@ -149,7 +115,7 @@ namespace ContentCollector
                     RemoveContentEntity(name);
                 }
 
-                foreach(var pair_name_entity in m_contentDictionary)
+                foreach(var pair_name_entity in mContentDictionary)
                 {
                     if (!pair_name_entity.Value.HasParentEntities() && !pair_name_entity.Value.IsRoot)
                         entitiesWithoutParent.Add(pair_name_entity.Key);
@@ -160,25 +126,26 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void ParseContentEntitiesInQuery()
         {
-            while (m_queryContentEntitiesToParse.Count > 0)
+            while (mQueryContentEntitiesToParse.Count > 0)
             {
-                m_queryContentEntitiesToParse[0].Parse();
-                m_queryContentEntitiesToParse.RemoveAt(0);
+                mQueryContentEntitiesToParse[0].Parse(this);
+                mQueryContentEntitiesToParse.RemoveAt(0);
             }
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void Rebuild()
         {
-            foreach (var pair_name_entity in m_contentDictionary)
+            foreach (var pair_name_entity in mContentDictionary)
             {
-                IContentEntity entity = pair_name_entity.Value;
+                cContentEntitySimple entity = pair_name_entity.Value;
                 entity.RemoveYouselfFromChildContentEntities();
                 entity.RemoveYouselfFromParentContentEntities();
             }
 
-            m_contentDictionary.Clear();
+            mContentDictionary.Clear();
 
-            AddRootContentEntity();
+            mContentDictionary.Add(mRootEntity.Name, mRootEntity);
+            mQueryContentEntitiesToParse.Add(mRootEntity);
 
             ParseContentEntitiesInQuery();
         }
@@ -189,19 +156,14 @@ namespace ContentCollector
 
             var serializer = new XmlSerializer(typeof(cBuild));                       
             serializer.Serialize(stream, this);
-/*
-            var serializer2 = new XmlSerializer(typeof(List<String>));
-            serializer2.Serialize(stream, ToSerialize);
 
-            XmlSerializer serializer = new XmlSerializer(typeof(ContentDictionaryItem[]), new XmlRootAttribute() { ElementName = "ContentDictionaryItems" });
-            serializer.Serialize(stream, m_contentDictionary.Select(kv => new ContentDictionaryItem() { Name = kv.Key, Entity = kv.Value }).ToArray());
-*/
             stream.Close();
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void Deserialize(string xmlFileName)
         {            
             StreamReader stream = new StreamReader(xmlFileName);
+            var serializer = new XmlSerializer(typeof(cBuild));
             //XmlSerializer serializer = new XmlSerializer(typeof(ContentDictionaryItem[]), new XmlRootAttribute() { ElementName = "ContentDictionaryItems" });
           //  m_contentDictionary = ((ContentDictionaryItem[])serializer.Deserialize(stream)).ToDictionary(i => i.Name, i => i.Entity);
 
@@ -211,7 +173,7 @@ namespace ContentCollector
         public List<string> GetContentList()
         {
             List<string> contentList = new List<string>();
-            foreach (var pair_name_entity in m_contentDictionary)
+            foreach (var pair_name_entity in mContentDictionary)
             {
                 if (pair_name_entity.Value.FileName.Length != 0)
                     contentList.Add(pair_name_entity.Value.FileName);

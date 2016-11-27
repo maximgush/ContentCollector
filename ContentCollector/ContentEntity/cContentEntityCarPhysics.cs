@@ -10,7 +10,7 @@ namespace ContentCollector
     public class cContentEntityCarPhysics : cContentEntitySimple
     {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public override void Parse()
+        public override void Parse(cBuild build)
         {
 //          AUTOMATION
 //             properties.read(global_config.app_dir + "data/physics/cars/Car" + number + playerPhysics)

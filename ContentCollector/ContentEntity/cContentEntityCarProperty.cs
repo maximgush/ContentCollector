@@ -10,7 +10,7 @@ namespace ContentCollector
     public class cContentEntityCarProperty : cContentEntitySimple
     {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public override void Parse()
+        public override void Parse(cBuild build)
         {
 //             AUTOMATION
 //             properties = ConfigParser.RawConfigParser()            
@@ -21,8 +21,7 @@ namespace ContentCollector
 //                     part = (driverPart.split('=')[1])[1:-1]
 //                     part = "export/gfxlib/" + part + ".n2"
 //                     file.write(part + "\n")
-//                     n2_search.main(file, global_config.app_dir + part, languages, lang_associations)
-            
+//                     n2_search.main(file, global_config.app_dir + part, languages, lang_associations)            
             // TODO:
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

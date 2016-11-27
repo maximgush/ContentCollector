@@ -10,7 +10,7 @@ namespace ContentCollector
     public class cContentEntityDevice : cContentEntitySimple
     {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public override void Parse()
+        public override void Parse(cBuild build)
         {
 //          AUTOMATION
 //         file.write (@"data/physics/devices/Device" + Name + @"/device.ini" + "\n")
