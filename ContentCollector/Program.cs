@@ -14,11 +14,23 @@ namespace ContentCollector
 
             build.AddRootContentEntity(typeof(cContentEntityGameTypesIni), "GameTypeIni", @"E:\Programming\Forward_Development\ContentCollector\Project\GameType.ini");
             build.ProductInternalName = "CATEGORY_C_EX";
-            build.ProjectPath = @"E:\Programming\Forward_Development\ContentCollector\Project";
+            build.ProjectPath = @"F:\Transporter\Project";
 
             build.Rebuild();
 
             build.Serialize(@"test.xml");
+
+            // Вывод в файл список контента
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"content_list.txt"))
+            {
+                var contentList = build.GetContentList();
+                contentList.Sort();
+                foreach (string line in contentList)
+                {
+                    file.WriteLine(line);
+                }
+            }
+
             //build.Update();
         }
     }

@@ -18,7 +18,7 @@ namespace ContentCollector
             string location = words[1];
 
             // db3
-            build.AddContentEntity(typeof(cContentEntityLocationDB3), Name + ".db3", @"export\db3\" + city + "\\" + location + ".db3", this);
+            build.AddContentEntity(typeof(cContentEntityLocationDB3), @"export\db\" + city + "\\" + location + ".db3", @"export\db3\" + city + "\\" + location + ".db3", this);
 
             // map
             build.AddContentEntity(typeof(cContentEntitySimple), @"export\levels\" + city + "\\" + location + ".map", @"export\levels\" + city + "\\" + location + ".map", this);

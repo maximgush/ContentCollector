@@ -45,8 +45,9 @@ namespace ContentCollector
             {
                 if (node.Attributes != null && node.Attributes["RulesControl"] != null)
                 {
-                    string devices = node.Attributes["RulesControl"].Value;
-                    build.AddContentEntity(typeof(cContentEntityDevice), node.Attributes["RulesControl"].Value, node.Attributes["RulesControl"].Value, this);
+                    string rulesControl = node.Attributes["RulesControl"].Value;
+                    if (rulesControl != "true")
+                        build.AddContentEntity(typeof(cContentEntityDevice), rulesControl, rulesControl, this);
                 }
             }
             #endregion 
@@ -93,7 +94,7 @@ namespace ContentCollector
                 if (node.Attributes != null && node.Attributes["TrafficCarsXml"] != null)
                     build.AddContentEntity(typeof(cContentEntityTrafficCarsXml), node.Attributes["TrafficCarsXml"].Value, node.Attributes["TrafficCarsXml"].Value, this);
             }
-            #endregion  
+            #endregion
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }   // cContentEntityMission

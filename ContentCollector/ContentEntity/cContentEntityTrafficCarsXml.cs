@@ -48,8 +48,11 @@ namespace ContentCollector
 
                 if (node.Attributes != null && pedName != null)
                 {
-                    pedName = @"export/gfxlib/characters/pedestrians/" + pedName + @"_human.n2";
-                    build.AddContentEntity(typeof(cContentEntityN2), pedName, pedName, this);
+                    foreach (string humanN2 in new string[]{"human.n2","human_run.n2","human_idle.n2"})
+                    {
+                        pedName = @"export/gfxlib/characters/pedestrians/" + pedName + @"/" + humanN2;
+                        build.AddContentEntity(typeof(cContentEntityN2), pedName, pedName, this);   
+                    }
                 }
             }
             #endregion

@@ -74,6 +74,7 @@ namespace ContentCollector
         public void AddContentEntity(System.Type entityType, string name, string fileName, cContentEntitySimple parent, bool isRoot = false)
         {
             // TODO: Переделать этот костыль
+            name = name.Replace("home:", "");
             name = name.Replace(":", "\\");
             name = name.Replace("/", "\\");
             name = name.Replace("\\\\","\\");            
@@ -91,7 +92,7 @@ namespace ContentCollector
             {
                 cContentEntitySimple entity = (cContentEntitySimple)Activator.CreateInstance(entityType);
                 entity.Name = name;
-                entity.FileName = fileName != null ? ProjectPath + "\\" + name : null;
+                entity.FileName = fileName != null ? ProjectPath + "\\" + name.Replace("(logic)","") : null;
                 entity.AddParentContentEntity(parent);
                 parent.AddChildContentEntity(entity);
                 entity.IsRoot = isRoot;
@@ -199,7 +200,8 @@ namespace ContentCollector
             List<string> contentList = new List<string>();
             foreach (var pair_name_entity in mContentDictionary)
             {
-                if (pair_name_entity.Value.FileName.Length != 0)
+                if (pair_name_entity.Value.FileName != null 
+                    && pair_name_entity.Value.FileName.Length != 0)
                     contentList.Add(pair_name_entity.Value.FileName);
             }
 
