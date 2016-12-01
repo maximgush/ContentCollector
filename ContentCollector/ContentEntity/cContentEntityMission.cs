@@ -70,7 +70,7 @@ namespace ContentCollector
             foreach (XmlNode node in xmlDoc.GetElementsByTagName("Location"))
             {
                 if (node.Attributes != null)
-                    build.AddContentEntity(typeof(cContentEntityLocation), cityName + "\\" + node.InnerText, null, this);
+                    build.AddContentEntity(typeof(cContentEntityLocation), cityName + '\\' + node.InnerText, null, this);
             }
             #endregion
 
