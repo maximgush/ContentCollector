@@ -17,8 +17,8 @@ namespace ContentCollector
 
         private bool m_isRoot = false;
 
-        private List<cContentEntitySimple> m_childContentEntities = new List<cContentEntitySimple>();
-        private List<cContentEntitySimple> m_parentContentEntities = new List<cContentEntitySimple>();
+        private ISet<cContentEntitySimple> m_childContentEntities = new HashSet<cContentEntitySimple>();
+        private ISet<cContentEntitySimple> m_parentContentEntities = new HashSet<cContentEntitySimple>();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public cContentEntitySimple()
         {
@@ -64,10 +64,10 @@ namespace ContentCollector
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void AddChildContentEntity(cContentEntitySimple entity)    { m_childContentEntities.Add(entity); }
-        public void RemoveChildContentEntity(cContentEntitySimple entity) { m_childContentEntities.RemoveAll(entity.Equals); }
+        public void RemoveChildContentEntity(cContentEntitySimple entity) { m_childContentEntities.Remove(entity); }
 
         public void AddParentContentEntity(cContentEntitySimple entity) { m_parentContentEntities.Add(entity); }
-        public void RemoveParentContentEntity(cContentEntitySimple entity) { m_parentContentEntities.RemoveAll(entity.Equals); }
+        public void RemoveParentContentEntity(cContentEntitySimple entity) { m_parentContentEntities.Remove(entity); }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void RemoveYouselfFromChildContentEntities()
         {
@@ -85,6 +85,11 @@ namespace ContentCollector
                 entity.RemoveChildContentEntity(this);
             }
             m_parentContentEntities.Clear();
+        }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public bool Equals(cContentEntitySimple entity)
+        {
+            return this.Name.Equals(entity.Name);
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public bool HasParentEntities() { return m_parentContentEntities.Count > 0; }
