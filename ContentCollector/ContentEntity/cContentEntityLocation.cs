@@ -13,8 +13,9 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
-            string city = Name.Split('\\')[0];
-            string location = Name.Split('\\')[1];
+            string[] words = Name.Split('\\');
+            string city = words[0];
+            string location = words[1];
 
             // db3
             build.AddContentEntity(typeof(cContentEntityLocationDB3), Name + ".db3", @"export\db3\" + city + "\\" + location + ".db3", this);

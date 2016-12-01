@@ -86,6 +86,14 @@ namespace ContentCollector
                 }                    
             }
             #endregion 
+
+            #region TrafficCarsXml
+            foreach (XmlNode node in xmlDoc.GetElementsByTagName("Mission"))
+            {
+                if (node.Attributes != null && node.Attributes["TrafficCarsXml"] != null)
+                    build.AddContentEntity(typeof(cContentEntityTrafficCarsXml), node.Attributes["TrafficCarsXml"].Value, node.Attributes["TrafficCarsXml"].Value, this);
+            }
+            #endregion  
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }   // cContentEntityMission

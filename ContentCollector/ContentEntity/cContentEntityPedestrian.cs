@@ -23,6 +23,8 @@ namespace ContentCollector
             //cBuild.Instance().AddContentEntity(eContentEntityTypes.cetN2, Name + @"_human.n2", @"export/gfxlib/characters/pedestrians/" + Name + @"/human.n2", this);
 
 
+
+
             // TODO:
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

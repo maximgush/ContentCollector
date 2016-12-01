@@ -18,35 +18,89 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         [DllImport("kernel32", CharSet = CharSet.Unicode)]
         static extern int GetPrivateProfileString(string Section, string Key, string Default, StringBuilder RetVal, int Size, string FilePath);
- 
+
         public override void Parse(cBuild build)
         {
             StringBuilder stringBuilder = new StringBuilder(255);
 
-            // PlayerCars
-            GetPrivateProfileString(build.ProductInternalName, "cars","",stringBuilder,255,this.FileName);
-            string cars = stringBuilder.ToString();
-            cars = cars.Trim(new char[] {'[', ']', ' '});
-            string[] carsArrayStrings = cars.Split(',');
-
-            foreach (var car in carsArrayStrings)
+            #region PlayerCars
             {
-                build.AddContentEntity(typeof(cContentEntityPlayerCar), "PlayerCar: " + car, null, this);
+                GetPrivateProfileString(build.ProductInternalName, "cars", "", stringBuilder, 255, this.FileName);
+                string cars = stringBuilder.ToString();
+                cars = cars.Trim(new char[] {'[', ']', ' '});
+                string[] carNumbers = cars.Split(',');
+
+                foreach (var carNumber in carNumbers)
+                    build.AddContentEntity(typeof(cContentEntityPlayerCar), "PlayerCar:cars/car" + carNumber, null, this);
+            }
+            #endregion
+
+            #region Missions
+            {
+                GetPrivateProfileString(build.ProductInternalName, "MissionsSubdir", "n/a", stringBuilder, 255, this.FileName);
+                string missionSubdirPath = @"data\missions" + (stringBuilder.ToString() != "n/a" ? @"\" + stringBuilder.ToString() : "");
+
+                int index = 1;
+                while (true)
+                {
+                    GetPrivateProfileString(build.ProductInternalName, "mission_" + index.ToString(), "", stringBuilder, 255, this.FileName);
+                    string mission = stringBuilder.ToString();
+
+                    if (mission == "")
+                        break;
+                    
+                    string missionPath = missionSubdirPath + @"\" + mission + ".xml";
+                    build.AddContentEntity(typeof(cContentEntityMission), missionPath, missionPath, this);
+
+                    index++;
+                }  
             }
 
-            // Missions
-            int index = 1;
-            GetPrivateProfileString(build.ProductInternalName, "mission_" + index.ToString(), "", stringBuilder, 255, this.FileName);
-            string missionPath = stringBuilder.ToString();
+            #endregion
 
-            while (missionPath != "")
+            #region Location_db3
             {
-                build.AddContentEntity(typeof(cContentEntityMission), "Mission: " + missionPath, missionPath, this);
+                int index = 1;
+                while (true)
+                {
+                    GetPrivateProfileString(build.ProductInternalName, "Location_db_" + index.ToString(), "", stringBuilder, 255, this.FileName);
+                    string locationDb3 = stringBuilder.ToString();
 
-                index++;
-                GetPrivateProfileString(build.ProductInternalName, "mission_" + index.ToString(), "", stringBuilder, 255, this.FileName);
-                missionPath = stringBuilder.ToString();
+                    if (locationDb3 == "")
+                        break;
+
+                    build.AddContentEntity(typeof(cContentEntityLocation), locationDb3.Replace(".db3",""), null, this);
+
+                    index++;
+                }  
             }
+            #endregion
+
+            #region LocationGuiImage
+            {
+                GetPrivateProfileString(build.ProductInternalName, "GUI_Folder_Name", "", stringBuilder, 255, this.FileName);
+                string guiFolderName = stringBuilder.ToString();
+
+                int index = 1;                
+                while (true)
+                {
+                    GetPrivateProfileString(build.ProductInternalName, "Location_" + index.ToString(), "", stringBuilder, 255, this.FileName);
+                    string locationGuiImage = stringBuilder.ToString();
+
+                    if (locationGuiImage == "")
+                        break;
+
+                    string icon = @"data\gui\" + guiFolderName + @"\imagesets\locations\" + locationGuiImage + "_icon.png";
+                    string detail = @"data\gui\" + guiFolderName + @"\imagesets\locations\" + locationGuiImage + "_detail.png";
+                    string mini = @"data\gui\" + guiFolderName + @"\imagesets\locations\" + locationGuiImage + "_mini.png";
+                    build.AddContentEntity(typeof(cContentEntitySimple), icon, icon, this);
+                    build.AddContentEntity(typeof(cContentEntitySimple), detail, detail, this);
+                    build.AddContentEntity(typeof(cContentEntitySimple), mini, mini, this);
+
+                    index++;
+                }   
+            }
+            #endregion
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }   // сContentEntityPlayerCar

@@ -32,8 +32,16 @@ namespace ContentCollector
         [XmlArrayItem("cContentEntitySimple", Type = typeof(cContentEntitySimple))]
         [XmlArrayItem("cContentEntityGameTypesIni", Type = typeof(cContentEntityGameTypesIni))]
         [XmlArrayItem("cContentEntityPlayerCar", Type = typeof(cContentEntityPlayerCar))]
+        [XmlArrayItem("cContentEntityTrafficCar", Type = typeof(cContentEntityTrafficCar))]
+        [XmlArrayItem("cContentEntityParkingCar", Type = typeof(cContentEntityParkingCar))]
+        [XmlArrayItem("cContentEntityTrafficCarsXml", Type = typeof(cContentEntityTrafficCarsXml))]
+        [XmlArrayItem("cContentEntityCarProperty", Type = typeof(cContentEntityCarProperty))]
+        [XmlArrayItem("cContentEntityDevice", Type = typeof(cContentEntityDevice))]
         [XmlArrayItem("cContentEntityMission", Type = typeof(cContentEntityMission))]
         [XmlArrayItem("cContentEntityLocation", Type = typeof(cContentEntityLocation))]
+        [XmlArrayItem("cContentEntityLocationDB3", Type = typeof(cContentEntityLocationDB3))]
+        [XmlArrayItem("cContentEntityN2", Type = typeof(cContentEntityN2))]
+        [XmlArrayItem("cContentEntityTexture", Type = typeof(cContentEntityTexture))]
         public List<cContentEntitySimple> Entities
         {
             get
@@ -55,7 +63,7 @@ namespace ContentCollector
                 MessageBox.Show("Root с именем " + name + " уже существует!");
                 return;
             }
-
+            
             cContentEntitySimple rootEntity = (cContentEntitySimple)Activator.CreateInstance(entityType);
             rootEntity.Name = name;
             rootEntity.FileName = fileName;
@@ -64,7 +72,13 @@ namespace ContentCollector
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void AddContentEntity(System.Type entityType, string name, string fileName, cContentEntitySimple parent, bool isRoot = false)
-        {            
+        {
+            // TODO: Переделать этот костыль
+            name = name.Replace(":", "\\");
+            name = name.Replace("/", "\\");
+            name = name.Replace("\\\\","\\");            
+            name = name.Replace("\\\\", "\\");
+
             if (mContentDictionary.ContainsKey(name))
             {
                 cContentEntitySimple entity = mContentDictionary[name];
@@ -77,7 +91,7 @@ namespace ContentCollector
             {
                 cContentEntitySimple entity = (cContentEntitySimple)Activator.CreateInstance(entityType);
                 entity.Name = name;
-                entity.FileName = fileName != null ? ProjectPath + "\\" + fileName : null;
+                entity.FileName = fileName != null ? ProjectPath + "\\" + name : null;
                 entity.AddParentContentEntity(parent);
                 parent.AddChildContentEntity(entity);
                 entity.IsRoot = isRoot;
