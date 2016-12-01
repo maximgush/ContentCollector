@@ -18,7 +18,7 @@ namespace ContentCollector
         private int mLastBuildRevision = -1;
         private string mProductInternalName = "";
 
-        private cContentEntitySimple mRootEntity = null;
+        private List<cContentEntitySimple> mRootEntities = new List<cContentEntitySimple>();
 
         private Dictionary<string, cContentEntitySimple> mContentDictionary = new Dictionary<string, cContentEntitySimple>();
         private List<cContentEntitySimple> mQueryContentEntitiesToParse = new List<cContentEntitySimple>();
@@ -50,10 +50,17 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void AddRootContentEntity(System.Type entityType, string name, string fileName)
         {
-            mRootEntity = (cContentEntitySimple)Activator.CreateInstance(entityType);
-            mRootEntity.Name = name;
-            mRootEntity.FileName = fileName;
-            mRootEntity.IsRoot = true;
+            if (mRootEntities.FindAll(x => x.Name == name).Count > 0)
+            {
+                MessageBox.Show("Root с именем " + name + " уже существует!");
+                return;
+            }
+
+            cContentEntitySimple rootEntity = (cContentEntitySimple)Activator.CreateInstance(entityType);
+            rootEntity.Name = name;
+            rootEntity.FileName = fileName;
+            rootEntity.IsRoot = true;
+            mRootEntities.Add(rootEntity);
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void AddContentEntity(System.Type entityType, string name, string fileName, cContentEntitySimple parent, bool isRoot = false)
@@ -144,8 +151,11 @@ namespace ContentCollector
 
             mContentDictionary.Clear();
 
-            mContentDictionary.Add(mRootEntity.Name, mRootEntity);
-            mQueryContentEntitiesToParse.Add(mRootEntity);
+            foreach (var rootEntity in mRootEntities)
+            {
+                mContentDictionary.Add(rootEntity.Name, rootEntity);
+                mQueryContentEntitiesToParse.Add(rootEntity);   
+            }            
 
             ParseContentEntitiesInQuery();
         }
