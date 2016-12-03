@@ -67,6 +67,8 @@
     <Compile Include="ContentEntity\cContentEntityGameTypesIni.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentEntity\cContentEntityHardCodeN2Files.cs" />
+    <Compile Include="ContentEntity\cContentEntityLanguage.cs" />
     <Compile Include="ContentEntity\cContentEntityLocation.cs" />
     <Compile Include="ContentEntity\cContentEntityLocationDB3.cs" />
     <Compile Include="ContentEntity\cContentEntityMission.cs">
@@ -86,6 +88,7 @@
     <Compile Include="ContentEntity\cContentEntityTexture.cs" />
     <Compile Include="ContentEntity\cContentEntityTrafficCar.cs" />
     <Compile Include="ContentEntity\cContentEntityTrafficCarsXml.cs" />
+    <Compile Include="ContentEntity\cContentEntityHardCodeFiles.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

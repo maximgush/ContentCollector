@@ -101,6 +101,18 @@ namespace ContentCollector
                 }   
             }
             #endregion
+
+            #region Languages
+            {
+                GetPrivateProfileString(build.ProductInternalName, "Language", "", stringBuilder, 255, this.FileName);
+                string languages = stringBuilder.ToString();
+                languages = languages.Trim(new char[] {'[', ']', ' '});
+                string[] languageArray = languages.Split(',');
+
+                foreach (var language in languageArray)
+                    build.AddContentEntity(typeof(cContentEntityLanguage), language, null, this);
+            }
+            #endregion
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }   // сContentEntityPlayerCar

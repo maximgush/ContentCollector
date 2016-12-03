@@ -42,6 +42,9 @@ namespace ContentCollector
         [XmlArrayItem("cContentEntityLocationDB3", Type = typeof(cContentEntityLocationDB3))]
         [XmlArrayItem("cContentEntityN2", Type = typeof(cContentEntityN2))]
         [XmlArrayItem("cContentEntityTexture", Type = typeof(cContentEntityTexture))]
+        [XmlArrayItem("cContentEntityLanguage", Type = typeof(cContentEntityLanguage))]
+        [XmlArrayItem("cContentEntityHardCodeFiles", Type = typeof(cContentEntityHardCodeFiles))]
+        [XmlArrayItem("cContentEntityHardCodeN2Files", Type = typeof(cContentEntityHardCodeN2Files))]
         public List<cContentEntitySimple> Entities
         {
             get
@@ -206,6 +209,16 @@ namespace ContentCollector
             }
 
             return contentList;
+        }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public string GetManglePath(string path)
+        {
+            return ProjectPath + "\\" + path.Replace("(logic)", "");
+        }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public string GetRelativePath(string path)
+        {
+            return path.Replace(ProjectPath + "\\","");
         }
     }   // сBuild
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
