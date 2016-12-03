@@ -1,12 +1,15 @@
-﻿using System;
+﻿//#define MULTITHREADING
+
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-
 
 namespace ContentCollector
 {
@@ -21,7 +24,9 @@ namespace ContentCollector
         private List<cContentEntitySimple> mRootEntities = new List<cContentEntitySimple>();
 
         private Dictionary<string, cContentEntitySimple> mContentDictionary = new Dictionary<string, cContentEntitySimple>();
-        private List<cContentEntitySimple> mQueryContentEntitiesToParse = new List<cContentEntitySimple>();
+        private ConcurrentQueue<cContentEntitySimple> mQueryContentEntitiesToParse = new ConcurrentQueue<cContentEntitySimple>();
+
+        private SpinLock spLock = new SpinLock();
 
         public string ProjectPath { get { return mProjectPath; } set { mProjectPath = value; } }
         public string RepositoryURL { get { return mRepositoryURL; } }
@@ -40,6 +45,8 @@ namespace ContentCollector
         [XmlArrayItem("cContentEntityMission", Type = typeof(cContentEntityMission))]
         [XmlArrayItem("cContentEntityLocation", Type = typeof(cContentEntityLocation))]
         [XmlArrayItem("cContentEntityLocationDB3", Type = typeof(cContentEntityLocationDB3))]
+        [XmlArrayItem("cContentEntityLocationMap", Type = typeof(cContentEntityLocationMap))]
+        [XmlArrayItem("cContentEntityLocationPstatic", Type = typeof(cContentEntityLocationPstatic))]
         [XmlArrayItem("cContentEntityN2", Type = typeof(cContentEntityN2))]
         [XmlArrayItem("cContentEntityTexture", Type = typeof(cContentEntityTexture))]
         [XmlArrayItem("cContentEntityLanguage", Type = typeof(cContentEntityLanguage))]
@@ -82,27 +89,40 @@ namespace ContentCollector
             name = name.Replace("/", "\\");
             name = name.Replace("\\\\","\\");            
             name = name.Replace("\\\\", "\\");
-
-            if (mContentDictionary.ContainsKey(name))
+            fileName = fileName != null ? ProjectPath + "\\" + name.Replace("(logic)", "") : null;
+#if MULTITHREADING
+            bool lockTaken = false;
+            try
             {
-                cContentEntitySimple entity = mContentDictionary[name];
-                if (entity.GetType() != entityType)
-                    MessageBox.Show("Элемент с таким именем уже существует под другим типом!");
+                spLock.Enter(ref lockTaken);
+#endif
+                if (mContentDictionary.ContainsKey(name))
+                {
+                    cContentEntitySimple entity = mContentDictionary[name];
+                    if (entity.GetType() != entityType)
+                        MessageBox.Show("Элемент с таким именем уже существует под другим типом!");
 
-                entity.AddParentContentEntity(parent);
+                    entity.AddParentContentEntity(parent);
+                }
+                else
+                {
+                    cContentEntitySimple entity = (cContentEntitySimple)Activator.CreateInstance(entityType);
+                    entity.Name = name;
+                    entity.FileName = fileName;
+                    entity.AddParentContentEntity(parent);
+                    parent.AddChildContentEntity(entity);
+                    entity.IsRoot = isRoot;
+
+                    mContentDictionary.Add(entity.Name, entity);
+                    mQueryContentEntitiesToParse.Enqueue(entity);
+                }
+#if MULTITHREADING
             }
-            else
+            finally
             {
-                cContentEntitySimple entity = (cContentEntitySimple)Activator.CreateInstance(entityType);
-                entity.Name = name;
-                entity.FileName = fileName != null ? ProjectPath + "\\" + name.Replace("(logic)","") : null;
-                entity.AddParentContentEntity(parent);
-                parent.AddChildContentEntity(entity);
-                entity.IsRoot = isRoot;
-                
-                mContentDictionary.Add(entity.Name, entity);
-                mQueryContentEntitiesToParse.Add(entity);
-            }
+                if (lockTaken) spLock.Exit();
+            }     
+#endif
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void RemoveContentEntity(string name)
@@ -126,7 +146,7 @@ namespace ContentCollector
                 {
                     cContentEntitySimple entity = mContentDictionary[changingFileNameRelative];
                     entity.RemoveYouselfFromChildContentEntities();
-                    mQueryContentEntitiesToParse.Add(entity);
+                    mQueryContentEntitiesToParse.Enqueue(entity);
                 }
             }
 
@@ -151,11 +171,49 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void ParseContentEntitiesInQuery()
         {
+
+#if MULTITHREADING
+//*****************************************************
+                int    maxThreads   = 0;
+                int    placeHolder  = 0;
+                int    availThreads = 0;
+
+                System.Threading.ThreadPool.GetMaxThreads(out maxThreads,out placeHolder);
+                System.Threading.ThreadPool.GetAvailableThreads(out availThreads, out placeHolder);
+//*****************************************************
+            while (mQueryContentEntitiesToParse.Count > 0 || availThreads != maxThreads)
+            {
+                while (mQueryContentEntitiesToParse.Count > 0)
+                {
+//                    while (events.Count >= 64) ;
+                    cContentEntitySimple entity = null;
+                    if (mQueryContentEntitiesToParse.TryDequeue(out entity))
+                    {
+                        var resetEvent = new ManualResetEvent(false);
+                        ThreadPool.QueueUserWorkItem(
+                                                        arg =>
+                                                        {
+                                                            entity.Parse(this);
+//                                                            resetEvent.Set();
+                                                        });
+//                        events.Add(resetEvent);
+                    }
+                }
+
+                System.Threading.ThreadPool.GetMaxThreads(out maxThreads,out placeHolder);
+                System.Threading.ThreadPool.GetAvailableThreads(out availThreads, out placeHolder);
+                if (availThreads != maxThreads)
+                    System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(50));
+//                WaitHandle.WaitAll(events.ToArray());
+            }            
+#else
             while (mQueryContentEntitiesToParse.Count > 0)
             {
-                mQueryContentEntitiesToParse[0].Parse(this);
-                mQueryContentEntitiesToParse.RemoveAt(0);
+                cContentEntitySimple entity = null;
+                if (mQueryContentEntitiesToParse.TryDequeue(out entity))
+                    entity.Parse(this);
             }
+#endif
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void Rebuild()
@@ -172,7 +230,7 @@ namespace ContentCollector
             foreach (var rootEntity in mRootEntities)
             {
                 mContentDictionary.Add(rootEntity.Name, rootEntity);
-                mQueryContentEntitiesToParse.Add(rootEntity);   
+                mQueryContentEntitiesToParse.Enqueue(rootEntity);   
             }            
 
             ParseContentEntitiesInQuery();

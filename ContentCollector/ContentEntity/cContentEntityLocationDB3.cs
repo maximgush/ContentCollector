@@ -15,6 +15,12 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
+            // Запускаем конвертер физики
+            Utils.RunProcess(build.GetManglePath(@"bin\win32\db3converter.exe"), build.GetManglePath(Name));
+            build.AddContentEntity(typeof(cContentEntitySimple), @"data\world\" + Name + ".p", @"data\world\" + Name + ".p", this);
+            build.AddContentEntity(typeof(cContentEntitySimple), @"data\world\" + Name + ".g", @"data\world\" + Name + ".g", this);
+
+            // 
             SQLiteConnection conn = new SQLiteConnection("Data Source=" + this.FileName);
             try
             {
