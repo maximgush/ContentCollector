@@ -83,6 +83,7 @@
     <Compile Include="ContentEntity\cContentEntityPlayerCar.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentEntity\cContentEntityRulesControl.cs" />
     <Compile Include="ContentEntity\cContentEntitySimple.cs" />
     <Compile Include="ContentEntity\cContentEntityTexture.cs" />
     <Compile Include="ContentEntity\cContentEntityTrafficCar.cs" />

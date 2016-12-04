@@ -1,4 +1,4 @@
-﻿//#define MULTITHREADING
+﻿#define MULTITHREADING
 
 using System;
 using System.Collections.Concurrent;
@@ -52,6 +52,7 @@ namespace ContentCollector
         [XmlArrayItem("cContentEntityLanguage", Type = typeof(cContentEntityLanguage))]
         [XmlArrayItem("cContentEntityHardCodeFiles", Type = typeof(cContentEntityHardCodeFiles))]
         [XmlArrayItem("cContentEntityHardCodeN2Files", Type = typeof(cContentEntityHardCodeN2Files))]
+        [XmlArrayItem("cContentEntityRulesControl", Type = typeof(cContentEntityRulesControl))]
         public List<cContentEntitySimple> Entities
         {
             get
@@ -66,7 +67,7 @@ namespace ContentCollector
             }
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public void AddRootContentEntity(System.Type entityType, string name, string fileName)
+        public void AddRootContentEntity(System.Type entityType, string name)
         {
             if (mRootEntities.FindAll(x => x.Name == name).Count > 0)
             {
@@ -76,20 +77,17 @@ namespace ContentCollector
             
             cContentEntitySimple rootEntity = (cContentEntitySimple)Activator.CreateInstance(entityType);
             rootEntity.Name = name;
-            rootEntity.FileName = fileName;
-            rootEntity.IsRoot = true;
             mRootEntities.Add(rootEntity);
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public void AddContentEntity(System.Type entityType, string name, string fileName, cContentEntitySimple parent, bool isRoot = false)
+        public void AddContentEntity(System.Type entityType, string name, cContentEntitySimple parent, bool isRoot = false)
         {
             // TODO: Переделать этот костыль
             name = name.Replace("home:", "");
             name = name.Replace(":", "\\");
             name = name.Replace("/", "\\");
-            name = name.Replace("\\\\","\\");            
+            name = name.Replace("\\\\","\\");
             name = name.Replace("\\\\", "\\");
-            fileName = fileName != null ? ProjectPath + "\\" + name.Replace("(logic)", "") : null;
 #if MULTITHREADING
             bool lockTaken = false;
             try
@@ -108,10 +106,8 @@ namespace ContentCollector
                 {
                     cContentEntitySimple entity = (cContentEntitySimple)Activator.CreateInstance(entityType);
                     entity.Name = name;
-                    entity.FileName = fileName;
                     entity.AddParentContentEntity(parent);
                     parent.AddChildContentEntity(entity);
-                    entity.IsRoot = isRoot;
 
                     mContentDictionary.Add(entity.Name, entity);
                     mQueryContentEntitiesToParse.Enqueue(entity);
@@ -162,7 +158,7 @@ namespace ContentCollector
 
                 foreach(var pair_name_entity in mContentDictionary)
                 {
-                    if (!pair_name_entity.Value.HasParentEntities() && !pair_name_entity.Value.IsRoot)
+                    if (!pair_name_entity.Value.HasParentEntities())
                         entitiesWithoutParent.Add(pair_name_entity.Key);
                 }
             }

@@ -9,32 +9,18 @@ namespace ContentCollector
 {
     public class cContentEntityDevice : cContentEntitySimple
     {
+        public string FileName { get { return null; } }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
-//          AUTOMATION
-//         file.write (@"data/physics/devices/Device" + Name + @"/device.ini" + "\n")
-//         file.write (@"export/meshes/devices/Device" + Name + @"/device_p.hkx" + "\n")
-//         file.write (@"export/gfxlib/devices/Device" + Name + @"/device.n2" + "\n")
-//         n2_search.main(file, global_config.app_dir + "export/gfxlib/devices/Device" + number + "/device.n2", languages, lang_associations)
-//         
-//         addIni = "data/gamedata/devices/Device" + number + "/device.ini"
-//         if os.path.exists(global_config.app_dir + addIni):
-//             file.write (addIni + "\n") 
-
-            string fileName; 
-
             // device.ini
-            fileName = @"data/physics/devices/Device" + Name + @"/device.ini";
-            //cBuild.Instance().AddContentEntity(eContentEntityTypes.cetSimple, fileName, fileName, this);
+            build.AddContentEntity(typeof(cContentEntitySimple), @"data/physics/devices/Device" + Name + @"/device.ini", this);
 
             // device_p.hkx
-            fileName = @"export/meshes/devices/Device" + Name + @"/device_p.hkx";
-            //cBuild.Instance().AddContentEntity(eContentEntityTypes.cetSimple, fileName, fileName, this);
+            build.AddContentEntity(typeof(cContentEntitySimple), @"export/meshes/devices/Device" + Name + @"/device_p.hkx", this);
 
             // device.n2
-            fileName = @"export/meshes/devices/Device" + Name + @"/device.n2";
-            //cBuild.Instance().AddContentEntity(eContentEntityTypes.cetN2, fileName, fileName, this);
+            build.AddContentEntity(typeof(cContentEntityHardCodeN2Files), @"export/meshes/devices/Device" + Name + @"/device.n2", this);
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }   // cContentEntityDevice

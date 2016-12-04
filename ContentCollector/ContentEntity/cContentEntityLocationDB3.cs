@@ -12,16 +12,17 @@ namespace ContentCollector
 {
     public class cContentEntityLocationDB3 : cContentEntitySimple
     {
+        public string FileName { get { return null; } }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
             // Запускаем конвертер физики
             Utils.RunProcess(build.GetManglePath(@"bin\win32\db3converter.exe"), build.GetManglePath(Name));
-            build.AddContentEntity(typeof(cContentEntitySimple), @"data\world\" + Name + ".p", @"data\world\" + Name + ".p", this);
-            build.AddContentEntity(typeof(cContentEntitySimple), @"data\world\" + Name + ".g", @"data\world\" + Name + ".g", this);
+            build.AddContentEntity(typeof(cContentEntitySimple), @"data\world\" + Name + ".p", this);
+            build.AddContentEntity(typeof(cContentEntitySimple), @"data\world\" + Name + ".g", this);
 
             // 
-            SQLiteConnection conn = new SQLiteConnection("Data Source=" + this.FileName);
+            SQLiteConnection conn = new SQLiteConnection("Data Source=" + build.GetManglePath(Name));
             try
             {
                 conn.Open();
@@ -40,7 +41,7 @@ namespace ContentCollector
                 while (r.Read())
                 {
                     string name = @"export/gfxlib/" + r["Graphics"].ToString() + ".n2";
-                    build.AddContentEntity(typeof(cContentEntityN2), name, name, this);
+                    build.AddContentEntity(typeof(cContentEntityN2), name, this);
                 }
                 r.Close();
             }
@@ -55,7 +56,7 @@ namespace ContentCollector
                 while (r.Read())
                 {
                     string name = "ParkingCar:" + r["Physics"].ToString().Replace("/p_parking_setup.ini","");
-                    build.AddContentEntity(typeof(cContentEntityParkingCar), name, null, this);
+                    build.AddContentEntity(typeof(cContentEntityParkingCar), name, this);
                 }
                 r.Close();
             }

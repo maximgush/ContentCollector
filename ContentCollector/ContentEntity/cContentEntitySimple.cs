@@ -15,8 +15,6 @@ namespace ContentCollector
 
         private string m_fileName = "";
 
-        private bool m_isRoot = false;
-
         private ISet<cContentEntitySimple> m_childContentEntities = new HashSet<cContentEntitySimple>();
         private ISet<cContentEntitySimple> m_parentContentEntities = new HashSet<cContentEntitySimple>();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,12 +29,11 @@ namespace ContentCollector
             set { m_name = value;}
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        [XmlAttribute]
         public string FileName
-         {
-            get { return m_fileName; } 
-            set { m_fileName = value;}
+        {
+            get { return Name; }
         }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public List<string> ParentContentEntities
         {
@@ -54,13 +51,6 @@ namespace ContentCollector
                 List<string> childs = new List<string>(m_childContentEntities.Select(elem => elem.Name).ToArray());
                 return childs;
             } 
-        }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        [XmlAttribute]
-        public bool IsRoot
-        {
-            get { return m_isRoot; }
-            set { m_isRoot = value; }
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void AddChildContentEntity(cContentEntitySimple entity)    { m_childContentEntities.Add(entity); }

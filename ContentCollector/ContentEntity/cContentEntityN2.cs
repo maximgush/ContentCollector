@@ -30,7 +30,7 @@ namespace ContentCollector
 
                 while (match.Success)
                 {
-                    build.AddContentEntity(typeof(cContentEntityTexture), "(logic)" + match.Groups[1].Value, match.Groups[1].Value, this);
+                    build.AddContentEntity(typeof(cContentEntityTexture), "(logic)" + match.Groups[1].Value, this);
                     match = match.NextMatch();
                 }
             }
@@ -45,7 +45,7 @@ namespace ContentCollector
 
                 while (match.Success)
                 {
-                    build.AddContentEntity(typeof(cContentEntitySimple), match.Groups[1].Value, match.Groups[1].Value, this);
+                    build.AddContentEntity(typeof(cContentEntitySimple), match.Groups[1].Value, this);
                     match = match.NextMatch();
                 }   
             }

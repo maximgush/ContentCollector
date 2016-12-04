@@ -16,7 +16,7 @@ namespace ContentCollector
             if (!texturesName.EndsWith(".dds"))
             {
                 texturesName = texturesName + ".dds";
-                build.AddContentEntity(typeof(cContentEntitySimple), texturesName, texturesName, this);
+                build.AddContentEntity(typeof(cContentEntitySimple), texturesName, this);
             }
             
             //TODO: Добавление текстур соответствующих сезону

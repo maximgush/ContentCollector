@@ -10,6 +10,7 @@ namespace ContentCollector
 {
     public class cContentEntityHardCodeN2Files : cContentEntitySimple
     {
+        public string FileName { get { return null; } }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
@@ -20,7 +21,7 @@ namespace ContentCollector
             var files = text.Split(new char[] { '\n', '\r' });
             foreach (var file in files)
             {
-                build.AddContentEntity(typeof(cContentEntityN2), file, file, this);   
+                build.AddContentEntity(typeof(cContentEntityN2), file, this);   
             }                
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

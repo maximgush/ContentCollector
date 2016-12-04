@@ -11,12 +11,13 @@ namespace ContentCollector
 {
     public class cContentEntityLocationMap : cContentEntitySimple
     {
+        public string FileName { get { return null; } }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
             // Мап-конвертер
             Utils.RunProcess(build.GetManglePath(@"bin\win32\MapConverter.exe"), build.GetManglePath(Name));
-            build.AddContentEntity(typeof(cContentEntitySimple), Name.Replace(".map",".bmap"),Name.Replace(".map",".bmap"), this);          
+            build.AddContentEntity(typeof(cContentEntitySimple), Name.Replace(".map",".bmap"), this);          
         }
     }   // cContentEntityLocationMap
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
