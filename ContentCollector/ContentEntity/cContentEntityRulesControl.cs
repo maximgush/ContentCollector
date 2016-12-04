@@ -26,13 +26,19 @@ namespace ContentCollector
             //        ...
             //    }
 
-            string pattern = "ToLoad[\\s\\S]+\"([^\\r\\n\"]+)\"[^\\}]+\\}";
-            Regex regex = new Regex(pattern);
+            Regex regex = new Regex("--[^\\r\\n]+[\\r\\n]");
+            rulesControlText = regex.Replace(rulesControlText, "");
+
+            regex = new Regex("ToLoad[^\\}]+\\}");
             Match match = regex.Match(rulesControlText);
+            string toLoad = match.Value;
+
+            regex = new Regex("\"([^\\r\\n\"]+)\"");
+            match = regex.Match(toLoad);
 
             while (match.Success)
             {
-                build.AddContentEntity(typeof(cContentEntityTexture), @"data\scripts.lua\plugins\" + match.Groups[1].Value + ".lua", this);
+                build.AddContentEntity(typeof(cContentEntitySimple), @"data\scripts.lua\plugins\" + match.Groups[1].Value + ".lua", this);
                 match = match.NextMatch();
             }
         }
