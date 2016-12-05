@@ -11,7 +11,8 @@ using System.Xml;
 namespace ContentCollector
 {
     public class cContentEntityParkingCar : cContentEntitySimple
-    {
+    {        
+        override public string FileName { get { return null; } }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {

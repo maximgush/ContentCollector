@@ -50,8 +50,7 @@ namespace ContentCollector
                 {
                     foreach (string humanN2 in new string[]{"human.n2","human_run.n2","human_idle.n2"})
                     {
-                        pedName = @"export/gfxlib/characters/pedestrians/" + pedName + @"/" + humanN2;
-                        build.AddContentEntity(typeof(cContentEntityN2), pedName, this);   
+                        build.AddContentEntity(typeof(cContentEntityN2), @"export/gfxlib/characters/pedestrians/" + pedName + @"/" + humanN2, this);   
                     }
                 }
             }

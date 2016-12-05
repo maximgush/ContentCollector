@@ -43,22 +43,26 @@ namespace ContentCollector
                 }
             }
 
-/*
+
             // Вывод в файл список контента собранного питоноскриптом
             StreamReader reader =
                 new StreamReader(new FileStream(
-                    @"F:\Transporter\Automation\Build System\result\final_content_list.txt", FileMode.Open));
-            string text = reader.ReadToEnd();
-            reader.Close();
+                    @"F:\Transporter\Automation\Build System\result\final_content_list.txt", FileMode.Open));           
 
-            var files = text.Split(new char[] {'\n', '\r'}).ToList();
-            files.ForEach(line => { line = line.Replace("home:", "");
-                                    line = line.Replace(":", "\\");
-                                    line = line.Replace("/", "\\");
-                                    line = line.Replace("\\\\", "\\");
-                                    line = line.Replace("\\\\", "\\");
-                                    line = line.TrimStart(new char[]{'\\'});
-            });
+            List<string> files = new List<string>();
+            while (!reader.EndOfStream)
+            {
+                string str =  reader.ReadLine();
+                str = str.Replace("home:", "");
+                str = str.Replace(":", "\\");
+                str = str.Replace("/", "\\");
+                str = str.Replace("/", "\\");
+                str = str.Replace("\\\\", "\\");
+                str = str.Replace("\\\\", "\\");
+                str = str.TrimStart(new char[] { '\\', '/' });
+                files.Add(str);
+            }
+            reader.Close();
 
             files.Sort();
 
@@ -66,13 +70,11 @@ namespace ContentCollector
             {
                 foreach (string line in files)
                 {
-                    if (line == "")
-                        continue;
                     file.WriteLine(line);
                 }
             }
             //build.Update();
-*/
+
             stopWatch.Stop();
             TimeSpan ts = stopWatch.Elapsed;
 
@@ -84,6 +86,8 @@ namespace ContentCollector
             Console.WriteLine("Сборка контента завершена");
             Console.WriteLine("Количество файлов: " + contentList.Count);
             Console.WriteLine("Время сборки: " + elapsedTime);
+
+            Utils.CompareContent("content_list.txt", "content_list_python.txt", "rst.txt");
 
             Console.ReadKey();
         }

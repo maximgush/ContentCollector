@@ -29,7 +29,7 @@ namespace ContentCollector
             set { m_name = value;}
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public string FileName
+        public virtual string FileName
         {
             get { return Name.Replace("(logic)",""); }
         }
