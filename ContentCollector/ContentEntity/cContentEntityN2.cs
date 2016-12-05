@@ -14,10 +14,11 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
-            if (!File.Exists(FileName))
+            string fileName = build.GetManglePath(Name);
+            if (!File.Exists(fileName))
                 return;
 
-            StreamReader reader = new StreamReader(new FileStream(FileName, FileMode.Open));
+            StreamReader reader = new StreamReader(new FileStream(fileName, FileMode.Open));
             string n2fileText = reader.ReadToEnd();
             reader.Close();
 
@@ -49,7 +50,22 @@ namespace ContentCollector
                     match = match.NextMatch();
                 }   
             }
-            #endregion          
+            #endregion  
+        
+            #region Animation
+            {
+                //.setanim "home:export/anims/characters/pedestrians/pedestrian01/human0.nax2"
+                string pattern = "setanim\\s+\"([^\\r\\n]+)\"[\\r\\n]";
+                Regex regex = new Regex(pattern);
+                Match match = regex.Match(n2fileText);
+
+                while (match.Success)
+                {
+                    build.AddContentEntity(typeof(cContentEntitySimple), match.Groups[1].Value, this);
+                    match = match.NextMatch();
+                }
+            }
+            #endregion  
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }   // cContentEntityN2
