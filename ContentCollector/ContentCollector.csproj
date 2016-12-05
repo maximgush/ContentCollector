@@ -64,6 +64,7 @@
     <Compile Include="ContentEntity\cContentEntityDevice.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentEntity\cContentEntityDirectory.cs" />
     <Compile Include="ContentEntity\cContentEntityGameTypesIni.cs">
       <SubType>Code</SubType>
     </Compile>

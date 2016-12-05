@@ -9,7 +9,7 @@ namespace ContentCollector
 {
     public class cContentEntityDevice : cContentEntitySimple
     {
-        public string FileName { get { return null; } }
+        override public string FileName { get { return null; } }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {

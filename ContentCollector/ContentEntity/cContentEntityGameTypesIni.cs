@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
 
@@ -15,7 +16,11 @@ namespace ContentCollector
         {
         }
 
-        public string FileName { get { return null; } }
+        override public string FileName
+        {
+            get { return null; }
+        }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         [DllImport("kernel32", CharSet = CharSet.Unicode)]
         static extern int GetPrivateProfileString(string Section, string Key, string Default, StringBuilder RetVal, int Size, string FilePath);
@@ -25,15 +30,13 @@ namespace ContentCollector
             StringBuilder stringBuilder = new StringBuilder(255);
 
             #region PlayerCars
-            {
                 GetPrivateProfileString(build.ProductInternalName, "cars", "", stringBuilder, 255, Name);
                 string cars = stringBuilder.ToString();
                 cars = cars.Trim(new char[] {'[', ']', ' '});
                 string[] carNumbers = cars.Split(',');
 
                 foreach (var carNumber in carNumbers)
-                    build.AddContentEntity(typeof(cContentEntityPlayerCar), "PlayerCar:cars/car" + carNumber, this);
-            }
+                    build.AddContentEntity(typeof(cContentEntityPlayerCar), "cars\\car" + carNumber, this);
             #endregion
 
             #region Missions
@@ -114,8 +117,81 @@ namespace ContentCollector
                     build.AddContentEntity(typeof(cContentEntityLanguage), language, this);
             }
             #endregion
+
+            #region GUI_Folder
+            {
+                GetPrivateProfileString(build.ProductInternalName, "GUI_Folder_Name", "", stringBuilder, 255, Name);
+                string guiFolderName = stringBuilder.ToString();
+
+                string path = build.GetManglePath(@"data\gui\" + guiFolderName + @"\imagesets\");
+                foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly))
+                {
+                    string name = build.GetRelativePath(file);
+                    build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                }
+
+                path = build.GetManglePath(@"data\gui\" + guiFolderName + @"\imagesets\indicators");
+                foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly))
+                {
+                    string name = build.GetRelativePath(file);
+                    build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                }
+
+                foreach (var carNumber in carNumbers)
+                {
+                    path = build.GetManglePath(@"data\gui\" + guiFolderName + @"\imagesets\cars\car" + carNumber.ToString());
+                    foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly))
+                    {
+                        string name = build.GetRelativePath(file);
+                        build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                    }
+                }
+
+                path = build.GetManglePath(@"data\gui\" + guiFolderName + @"\fonts\");
+                foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly))
+                {
+                    string name = build.GetRelativePath(file);
+                    build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                }
+
+                path = build.GetManglePath(@"data\gui\" + guiFolderName + @"\looknfeel\");
+                foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly))
+                {
+                    string name = build.GetRelativePath(file);
+                    build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                }
+
+                path = build.GetManglePath(@"data\gui\" + guiFolderName + @"\layouts\");
+                foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly))
+                {
+                    string name = build.GetRelativePath(file);
+                    build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                }
+
+                path = build.GetManglePath(@"data\gui\" + guiFolderName + @"\schemes\");
+                foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly))
+                {
+                    string name = build.GetRelativePath(file);
+                    build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                }
+
+                path = build.GetManglePath(@"data\gui\" + guiFolderName + @"\configs\");
+                foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly))
+                {
+                    string name = build.GetRelativePath(file);
+                    build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                }
+
+                path = build.GetManglePath(@"data\gui\Common");
+                foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories))
+                {
+                    string name = build.GetRelativePath(file);
+                    build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                }  
+            }
+            #endregion
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    }   // сContentEntityPlayerCar
+    }   // cContentEntityGameTypesIni
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }   // сContentCollector

@@ -88,6 +88,8 @@ namespace ContentCollector
             name = name.Replace("/", "\\");
             name = name.Replace("\\\\","\\");
             name = name.Replace("\\\\", "\\");
+            name = name.ToLower();
+
 #if MULTITHREADING
             bool lockTaken = false;
             try

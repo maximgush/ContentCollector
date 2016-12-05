@@ -39,16 +39,37 @@ namespace ContentCollector
             while (!reader2.EndOfStream)
             {
                 string file = reader2.ReadLine();
-                if (content1.Contains(file))
-                    content1.Remove(file);
-                else
-                    content2.Add(file);
+
+                file = file.Replace("home:", "");
+                file = file.Replace(":", "\\");
+                file = file.Replace("/", "\\");
+                file = file.Replace("\\\\", "\\");
+                file = file.Replace("\\\\", "\\");
+                file = file.TrimStart(new char[] { '\\' });
+                file = file.ToLower();
+                content2.Add(file);
             }
             reader2.Close();
 
+
+            HashSet<string> setUniqueFromContent1 = new HashSet<string>();
+            HashSet<string> setUniqueFromContent2 = new HashSet<string>();
+
+            foreach (var file in content2)
+            {
+                if (!content1.Contains(file))
+                    setUniqueFromContent2.Add(file);
+            }
+
+            foreach (var file in content1)
+            {
+                if (!content2.Contains(file))
+                    setUniqueFromContent1.Add(file);
+            }
+
             using (System.IO.StreamWriter writer = new System.IO.StreamWriter(resultFile))
             {
-                foreach (string line in content1)
+                foreach (string line in setUniqueFromContent1)
                 {
                     writer.WriteLine("+" + line);
                 }
@@ -56,7 +77,7 @@ namespace ContentCollector
                 writer.WriteLine();
                 writer.WriteLine();
 
-                foreach (string line in content2)
+                foreach (string line in setUniqueFromContent2)
                 {
                     writer.WriteLine("-" + line);
                 }

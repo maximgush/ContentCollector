@@ -8,23 +8,20 @@ using System.IO;
 
 namespace ContentCollector
 {
-    public class cContentEntityHardCodeN2Files : cContentEntitySimple
+    public class cContentEntityDirectory : cContentEntitySimple
     {
         override public string FileName { get { return null; } }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
-            StreamReader reader = new StreamReader(new FileStream(FileName, FileMode.Open));
-            string text = reader.ReadToEnd();
-            reader.Close();
-
-            var files = text.Split(new char[] { '\n', '\r' });
-            foreach (var file in files)
+            string path = build.GetManglePath(Name);
+            foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories))
             {
-                build.AddContentEntity(typeof(cContentEntityN2), file, this);   
-            }                
+                string name = build.GetRelativePath(file);
+                build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+            }
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    }   // cContentEntityHardCodeFiles
+    }   // cContentEntityDirectory
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }   // сContentCollector
