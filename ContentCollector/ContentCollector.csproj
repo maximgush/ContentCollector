@@ -55,9 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="cBuild.cs" />
-    <Compile Include="ContentEntity\cContentEntityCarPhysics.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="ContentEntity\cContentEntityCarPhysicsProperty.cs" />
     <Compile Include="ContentEntity\cContentEntityCarProperty.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -81,6 +79,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentEntity\cContentEntityParkingCar.cs" />
+    <Compile Include="ContentEntity\cContentEntityPedestrian.cs" />
     <Compile Include="ContentEntity\cContentEntityPlayerCar.cs">
       <SubType>Code</SubType>
     </Compile>

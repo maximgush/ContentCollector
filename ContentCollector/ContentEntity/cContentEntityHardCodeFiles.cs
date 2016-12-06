@@ -14,15 +14,13 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
-            StreamReader reader = new StreamReader(new FileStream(FileName, FileMode.Open));
-            string text = reader.ReadToEnd();
-            reader.Close();
-
-            var files = text.Split(new char[] { '\n', '\r' });
-            foreach (var file in files)
+            StreamReader reader = new StreamReader(new FileStream(Name, FileMode.Open));            
+            while (!reader.EndOfStream)
             {
-                build.AddContentEntity(typeof(cContentEntitySimple), file, this);   
-            }                
+                string file = reader.ReadLine();
+                build.AddContentEntity(typeof(cContentEntitySimple), file, this);
+            }
+            reader.Close();              
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }   // cContentEntityHardCodeFiles

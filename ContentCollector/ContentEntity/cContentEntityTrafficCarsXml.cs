@@ -28,7 +28,7 @@ namespace ContentCollector
             {
                 string carName = node.Attributes["name"].Value;
                 if (node.Attributes != null && carName != null)
-                    build.AddContentEntity(typeof(cContentEntityTrafficCar), @"cars\" + carName, this);
+                    build.AddContentEntity(typeof(cContentEntityTrafficCar), @"TrafficCar\cars\" + carName, this);
             }
             #endregion
 
@@ -37,7 +37,7 @@ namespace ContentCollector
             {
                 string carName = node.Attributes["name"].Value;
                 if (node.Attributes != null && carName != null)
-                    build.AddContentEntity(typeof(cContentEntityTrafficCar), @"cars\" + carName, this);
+                    build.AddContentEntity(typeof(cContentEntityTrafficCar), @"TrafficCar\cars\" + carName, this);
             }
             #endregion
 
@@ -45,14 +45,8 @@ namespace ContentCollector
             foreach (XmlNode node in xmlDoc.GetElementsByTagName("Pedestrian"))
             {
                 string pedName = node.Attributes["name"].Value;
-
                 if (node.Attributes != null && pedName != null)
-                {
-                    foreach (string humanN2 in new string[]{"human.n2","human_run.n2","human_idle.n2"})
-                    {
-                        build.AddContentEntity(typeof(cContentEntityN2), @"export/gfxlib/characters/pedestrians/" + pedName + @"/" + humanN2, this);   
-                    }
-                }
+                    build.AddContentEntity(typeof(cContentEntityPedestrian), @"pedestrians\" + pedName, this);
             }
             #endregion
         }

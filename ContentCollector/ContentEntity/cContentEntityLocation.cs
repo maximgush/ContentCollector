@@ -28,6 +28,9 @@ namespace ContentCollector
             // тематические зоны
             build.AddContentEntity(typeof(cContentEntitySimple),  @"export\levels\" + city + "\\" + location + "_zones.xml",  this);
 
+            // Триггерные зоны?..
+            build.AddContentEntity(typeof(cContentEntitySimple), @"export\levels\" + city + "\\" + location + "_actions.xml", this);
+
             // Физика (.pstatic)
             build.AddContentEntity(typeof(cContentEntityLocationPstatic), @"data\world\" + Name + ".pstatic", this);
 

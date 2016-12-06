@@ -8,30 +8,24 @@ using System.IO;
 
 namespace ContentCollector
 {
-    public class cContentEntityPlayerCar : cContentEntitySimple
+    public class cContentEntityPedestrian : cContentEntitySimple
     {
         override public string FileName { get { return null; } }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
             string[] words = Name.Split(new char[]{'\\'});
-            string carName = words[2];
+            string pedName = words[1];
 
             // CarProperty
-            build.AddContentEntity(typeof(cContentEntityCarProperty), @"data\gamedata\cars\" + carName + @"\CarProperty.ini", this);
+            build.AddContentEntity(typeof(cContentEntityCarProperty), @"data\gamedata\pedestrians\" + pedName + @"\CarProperty.ini", this);
 
-            // p_player_setup.ini
-            build.AddContentEntity(typeof(cContentEntityCarPhysicsProperty), @"data/physics/cars/" + Name + @"\p_player_setup.ini", this);
-
-            // n2
-            string path = build.GetManglePath("export\\gfxlib\\cars\\" + carName);
-            foreach (string file in Directory.EnumerateFiles(path, "*.n2", SearchOption.AllDirectories))
+            foreach (string humanN2 in new string[] { "human.n2", "human_run.n2", "human_idle.n2" })
             {
-                string name = build.GetRelativePath(file);
-                build.AddContentEntity(typeof(cContentEntityN2), name, this);
+                build.AddContentEntity(typeof(cContentEntityN2), @"export/gfxlib/characters/pedestrians/" + pedName + @"/" + humanN2, this);
             }
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    }   // сContentEntityPlayerCar
+    }   // cContentEntityPedestrian
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }   // сContentCollector

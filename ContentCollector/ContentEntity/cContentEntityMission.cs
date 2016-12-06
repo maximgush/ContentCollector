@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 
 namespace ContentCollector
@@ -54,7 +55,11 @@ namespace ContentCollector
             foreach (XmlNode node in xmlDoc.GetElementsByTagName("Video"))
             {
                 if (node.Attributes != null && node.Attributes["File"] != null)
-                    build.AddContentEntity(typeof(cContentEntitySimple), node.Attributes["File"].Value, this);
+                {
+                    string videoFile = node.Attributes["File"].Value;
+                    videoFile = videoFile.Replace(".avi", ".caf");
+                    build.AddContentEntity(typeof(cContentEntitySimple), videoFile, this);
+                }
             }
             #endregion
 

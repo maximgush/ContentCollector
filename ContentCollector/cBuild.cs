@@ -36,17 +36,25 @@ namespace ContentCollector
 
         [XmlArrayItem("cContentEntitySimple", Type = typeof(cContentEntitySimple))]
         [XmlArrayItem("cContentEntityGameTypesIni", Type = typeof(cContentEntityGameTypesIni))]
+
         [XmlArrayItem("cContentEntityPlayerCar", Type = typeof(cContentEntityPlayerCar))]
         [XmlArrayItem("cContentEntityTrafficCar", Type = typeof(cContentEntityTrafficCar))]
         [XmlArrayItem("cContentEntityParkingCar", Type = typeof(cContentEntityParkingCar))]
+        [XmlArrayItem("cContentEntityPedestrian", Type = typeof(cContentEntityPedestrian))]
+
         [XmlArrayItem("cContentEntityTrafficCarsXml", Type = typeof(cContentEntityTrafficCarsXml))]
+
         [XmlArrayItem("cContentEntityCarProperty", Type = typeof(cContentEntityCarProperty))]
+        [XmlArrayItem("cContentEntityCarPhysicsProperty", Type = typeof(cContentEntityCarPhysicsProperty))]
+
         [XmlArrayItem("cContentEntityDevice", Type = typeof(cContentEntityDevice))]
+
         [XmlArrayItem("cContentEntityMission", Type = typeof(cContentEntityMission))]
         [XmlArrayItem("cContentEntityLocation", Type = typeof(cContentEntityLocation))]
         [XmlArrayItem("cContentEntityLocationDB3", Type = typeof(cContentEntityLocationDB3))]
         [XmlArrayItem("cContentEntityLocationMap", Type = typeof(cContentEntityLocationMap))]
         [XmlArrayItem("cContentEntityLocationPstatic", Type = typeof(cContentEntityLocationPstatic))]
+        
         [XmlArrayItem("cContentEntityN2", Type = typeof(cContentEntityN2))]
         [XmlArrayItem("cContentEntityTexture", Type = typeof(cContentEntityTexture))]
         [XmlArrayItem("cContentEntityLanguage", Type = typeof(cContentEntityLanguage))]
