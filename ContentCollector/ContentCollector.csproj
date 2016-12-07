@@ -62,10 +62,11 @@
     <Compile Include="ContentEntity\cContentEntityDevice.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentEntity\cContentEntityDirectory.cs" />
     <Compile Include="ContentEntity\cContentEntityGameTypesIni.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentEntity\cContentEntityHardCodeFilesBinWin32.cs" />
+    <Compile Include="ContentEntity\cContentEntityHardCodeFilesDataConfig.cs" />
     <Compile Include="ContentEntity\cContentEntityHardCodeN2Files.cs" />
     <Compile Include="ContentEntity\cContentEntityLanguage.cs" />
     <Compile Include="ContentEntity\cContentEntityLocation.cs" />
