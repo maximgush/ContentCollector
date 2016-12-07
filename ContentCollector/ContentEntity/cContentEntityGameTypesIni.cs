@@ -114,7 +114,10 @@ namespace ContentCollector
                 string[] languageArray = languages.Split(',');
 
                 foreach (var language in languageArray)
+                {
                     build.AddContentEntity(typeof(cContentEntityLanguage), language, this);
+                    build.Locales.Add(language.Replace('-','_'));
+                }
             }
             #endregion
 

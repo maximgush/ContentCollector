@@ -115,7 +115,7 @@ namespace ContentCollector
 
                         if (File.Exists(build.GetManglePath(path)))
                             build.AddContentEntity(this.GetType(), path, this);
-                        else
+                        else if (build.LocaleAssociations.ContainsKey(locale))
                         {
                             foreach (var localeAssociation in build.LocaleAssociations[locale])
                             {

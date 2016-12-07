@@ -34,7 +34,30 @@ namespace ContentCollector
 
         private SpinLock spLock = new SpinLock();
 
-        public string ProjectPath { get { return mProjectPath; } set { mProjectPath = value; } }
+        public string ProjectPath
+        {
+            get { return mProjectPath; }
+            set
+            {
+                mProjectPath = value;
+
+                string path = GetManglePath(@"data\i18n\associations.txt");
+                if (File.Exists(path))
+                {
+                    StreamReader reader = new StreamReader(new FileStream(path, FileMode.Open));
+                    while (!reader.EndOfStream)
+                    {
+                        string str = reader.ReadLine();
+                        string[] locale_association = str.Split(';');
+                        if (!LocaleAssociations.ContainsKey(locale_association[0]));
+                             LocaleAssociations.Add(locale_association[0], new List<string>());
+                        
+                        LocaleAssociations[locale_association[0]].Add(locale_association[1]);
+                    }
+                    reader.Close();
+                }
+            }
+        }
         public string RepositoryURL { get { return mRepositoryURL; } }
         public int LastBuildRevision { get { return mLastBuildRevision; } }
         public string ProductInternalName { get { return mProductInternalName; } set { mProductInternalName = value; }}
@@ -64,7 +87,10 @@ namespace ContentCollector
         [XmlArrayItem("cContentEntityN2", Type = typeof(cContentEntityN2))]
         [XmlArrayItem("cContentEntityTexture", Type = typeof(cContentEntityTexture))]
         [XmlArrayItem("cContentEntityLanguage", Type = typeof(cContentEntityLanguage))]
+
         [XmlArrayItem("cContentEntityHardCodeFiles", Type = typeof(cContentEntityHardCodeFiles))]
+        [XmlArrayItem("cContentEntityHardCodeFilesBinWin32", Type = typeof(cContentEntityHardCodeFilesBinWin32))]
+        [XmlArrayItem("cContentEntityHardCodeFilesDataConfig", Type = typeof(cContentEntityHardCodeFilesDataConfig))]
         [XmlArrayItem("cContentEntityHardCodeN2Files", Type = typeof(cContentEntityHardCodeN2Files))]
         [XmlArrayItem("cContentEntityRulesControl", Type = typeof(cContentEntityRulesControl))]
         public List<cContentEntitySimple> Entities
@@ -250,12 +276,14 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void Serialize(string xmlFileName)
         {
+/*
             StreamWriter stream = new StreamWriter(xmlFileName);
 
             var serializer = new XmlSerializer(typeof(cBuild));                       
             serializer.Serialize(stream, this);
 
             stream.Close();
+ */ 
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void Deserialize(string xmlFileName)
