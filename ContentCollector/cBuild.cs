@@ -21,6 +21,12 @@ namespace ContentCollector
         private int mLastBuildRevision = -1;
         private string mProductInternalName = "";
 
+
+        public List<string> Seasons = new List<string>() { "" };
+        public List<string> Locales = new List<string>();
+        public Dictionary<string, List<string>> LocaleAssociations = new Dictionary<string, List<string>>() { { "ru_RU", new List<string>() { "" } }};
+        public List<string> Celebrations = new List<string>() { "" };
+
         private List<cContentEntitySimple> mRootEntities = new List<cContentEntitySimple>();
 
         private Dictionary<string, cContentEntitySimple> mContentDictionary = new Dictionary<string, cContentEntitySimple>();

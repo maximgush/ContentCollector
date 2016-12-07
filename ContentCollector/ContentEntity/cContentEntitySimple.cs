@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using System.IO;
 
 namespace ContentCollector
 {
@@ -85,6 +86,49 @@ namespace ContentCollector
         public bool HasParentEntities() { return m_parentContentEntities.Count > 0; }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public virtual void Parse(cBuild build) {}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public virtual void AddEntityVariants(cBuild build)
+        {
+            string fileName = Path.GetFileName(Name);
+            string directory = Path.GetDirectoryName(build.GetManglePath(build.GetRelativePath(Name)));
+
+            // Выделяем расширение файла
+            // Это делается таким сложным способом (вместо File.GetExtension(...)) поскольку у нас есть файлы с несколькими расширениями
+            // Например image.tga.dds
+            int indexDot = fileName.IndexOf('.');
+            if (indexDot < 0)
+                return;
+
+            string extension = fileName.Substring(indexDot);
+            fileName = fileName.Substring(0, indexDot);
+
+            foreach (var season in build.Seasons)
+            {
+                string prefix = season != "" ? '(' + season + ")_" : "";
+                foreach (var celebration in build.Celebrations)
+                {
+                    string suffixCelebration = celebration != "" ? '.' + celebration : "";
+                    foreach (var locale in build.Locales)
+                    {
+                        string suffixLocale = locale != "" ? '_' + locale : "";
+                        string path = directory + prefix + fileName + suffixLocale + suffixCelebration + extension;
+
+                        if (File.Exists(build.GetManglePath(path)))
+                            build.AddContentEntity(this.GetType(), path, this);
+                        else
+                        {
+                            foreach (var localeAssociation in build.LocaleAssociations[locale])
+                            {
+                                suffixLocale = localeAssociation != "" ? '_' + localeAssociation : "";
+                                path = directory + prefix + fileName + suffixLocale + suffixCelebration + extension;
+                                if (File.Exists(build.GetManglePath(path)))
+                                    build.AddContentEntity(this.GetType(), path, this);
+                            }
+                        }
+                    }
+                }
+            }            
+        }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void Serialize() { /* TODO */ }
         public void DeSerialize() { /* TODO */ }
