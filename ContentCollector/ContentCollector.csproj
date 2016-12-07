@@ -62,6 +62,7 @@
     <Compile Include="ContentEntity\cContentEntityDevice.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentEntity\cContentEntityDirectory.cs" />
     <Compile Include="ContentEntity\cContentEntityGameTypesIni.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -80,7 +81,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentEntity\cContentEntityParkingCar.cs" />
+    <Compile Include="ContentEntity\cContentEntityPassengers.cs" />
     <Compile Include="ContentEntity\cContentEntityPedestrian.cs" />
+    <Compile Include="ContentEntity\cContentEntityPhysicsIni.cs" />
     <Compile Include="ContentEntity\cContentEntityPlayerCar.cs">
       <SubType>Code</SubType>
     </Compile>

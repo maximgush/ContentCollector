@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Collections.Generic;
+using System.Data.SQLite;
 
 namespace ContentCollector
 {
@@ -29,7 +30,11 @@ namespace ContentCollector
         public static void GetNormalPath(ref string name)
         {
             name = name.Replace("home:", "");
-            name = name.Replace(":", "\\");
+            name = name.Replace("proj:", "");
+            name = name.Replace("data:", "data\\");
+            name = name.Replace("export:", "export\\");
+            name = name.Replace("meshes:", "export\\meshes\\");
+            name = name.Replace("textures:", "export\\textures\\");
             name = name.Replace("/", "\\");
             name = name.TrimStart(new char[] { '\\' });
             name = name.Replace("\\\\","\\");
@@ -66,6 +71,9 @@ namespace ContentCollector
                     setUniqueFromContent2.Add(file);
             }
 
+            bool k = content1.Contains(@"export\texturesdds\characters\passangers\man_01.tga.dds");
+            bool p = content2.Contains(@"export\texturesdds\characters\passangers\man_01.tga.dds");
+
             foreach (var file in content1)
             {
                 if (!content2.Contains(file))
@@ -74,6 +82,10 @@ namespace ContentCollector
 
             using (System.IO.StreamWriter writer = new System.IO.StreamWriter(resultFile))
             {
+                writer.WriteLine("Добавлено файлов: " + setUniqueFromContent1.Count.ToString());
+                writer.WriteLine("Удалено файлов: " + setUniqueFromContent2.Count.ToString());
+                writer.WriteLine();
+
                 foreach (string line in setUniqueFromContent1)
                 {
                     writer.WriteLine("+" + line);

@@ -32,6 +32,7 @@ namespace ContentCollector
                 Console.WriteLine(ex.Message);
             }
 
+            #region Graphics
             if (conn.State == ConnectionState.Open)
             {
                 SQLiteCommand cmd = new SQLiteCommand(conn);
@@ -40,11 +41,32 @@ namespace ContentCollector
                 SQLiteDataReader r = cmd.ExecuteReader();
                 while (r.Read())
                 {
-                    string name = @"export/gfxlib/" + r["Graphics"].ToString() + ".n2";
+                    string name = @"export\gfxlib\" + r["Graphics"].ToString() + ".n2";
                     build.AddContentEntity(typeof(cContentEntityN2), name, this);
                 }
                 r.Close();
             }
+            #endregion
+
+            #region Physics
+            if (conn.State == ConnectionState.Open)
+            {
+                SQLiteCommand cmd = new SQLiteCommand(conn);
+                cmd.CommandText = "SELECT Physics FROM _Entities";
+
+                SQLiteDataReader r = cmd.ExecuteReader();
+                while (r.Read())
+                {
+                    string physics = r["Physics"].ToString();
+                    if (physics != "" && physics != "static")
+                    {
+                        string name = @"data\physics\" + physics + ".n2";
+                        build.AddContentEntity(typeof(cContentEntityN2), name, this);   
+                    }
+                }
+                r.Close();
+            }
+            #endregion
 
             #region ParkingCars
             if (conn.State == ConnectionState.Open)

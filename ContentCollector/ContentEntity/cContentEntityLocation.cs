@@ -25,18 +25,21 @@ namespace ContentCollector
             // startpoints
             build.AddContentEntity(typeof(cContentEntitySimple), @"data\startpoints\" + city + "\\" + location + @"\startpoints.xml", this);
 
-            // тематические зоны
-            build.AddContentEntity(typeof(cContentEntitySimple),  @"export\levels\" + city + "\\" + location + "_zones.xml",  this);
+            // Какие-то координаты чего-то..
+            build.AddContentEntity(typeof(cContentEntitySimple), @"data\world\" + city + "\\" + location + ".ini", this);
 
             // Триггерные зоны?..
-            build.AddContentEntity(typeof(cContentEntitySimple), @"export\levels\" + city + "\\" + location + "_actions.xml", this);
+            build.AddContentEntity(typeof(cContentEntitySimple), @"data\world\" + city + "\\" + location + "_actions.xml", this);
 
             // Физика (.pstatic)
             build.AddContentEntity(typeof(cContentEntityLocationPstatic), @"data\world\" + Name + ".pstatic", this);
 
             // Навигация
             build.AddContentEntity(typeof(cContentEntityLocationMap), @"export\levels\" + Name + ".map", this);
-            build.AddContentEntity(typeof(cContentEntityLocationMap), @"export\levels\" + Name + ".add.map", this);    
+            build.AddContentEntity(typeof(cContentEntityLocationMap), @"export\levels\" + Name + ".add.map", this);
+
+            // тематические зоны
+            build.AddContentEntity(typeof(cContentEntitySimple), @"export\levels\" + city + "\\" + location + "_zones.xml", this);
         }
     }   // cContentEntityLocation
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

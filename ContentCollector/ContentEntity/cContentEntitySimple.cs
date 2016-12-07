@@ -90,7 +90,7 @@ namespace ContentCollector
         public virtual void AddEntityVariants(cBuild build)
         {
             string fileName = Path.GetFileName(Name);
-            string directory = Path.GetDirectoryName(build.GetManglePath(build.GetRelativePath(Name)));
+            string directory = Path.GetDirectoryName(build.GetManglePath(build.GetRelativePath(Name))) + "\\";
 
             // Выделяем расширение файла
             // Это делается таким сложным способом (вместо File.GetExtension(...)) поскольку у нас есть файлы с несколькими расширениями

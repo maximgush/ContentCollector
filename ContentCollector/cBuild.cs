@@ -92,6 +92,8 @@ namespace ContentCollector
         [XmlArrayItem("cContentEntityHardCodeFilesBinWin32", Type = typeof(cContentEntityHardCodeFilesBinWin32))]
         [XmlArrayItem("cContentEntityHardCodeFilesDataConfig", Type = typeof(cContentEntityHardCodeFilesDataConfig))]
         [XmlArrayItem("cContentEntityHardCodeN2Files", Type = typeof(cContentEntityHardCodeN2Files))]
+        [XmlArrayItem("cContentEntityDirectory", Type = typeof(cContentEntityDirectory))]
+
         [XmlArrayItem("cContentEntityRulesControl", Type = typeof(cContentEntityRulesControl))]
         public List<cContentEntitySimple> Entities
         {

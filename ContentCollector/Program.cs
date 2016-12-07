@@ -18,14 +18,10 @@ namespace ContentCollector
 
             cBuild build = new cBuild();
 
-//             build.AddRootContentEntity(typeof(cContentEntityGameTypesIni), "GameTypeIni",
-//                 @"E:\Programming\Forward_Development\ContentCollector\Project\GameType.ini");
-            build.AddRootContentEntity(typeof(cContentEntityGameTypesIni), @"F:\Transporter\Automation\Build System\config\Game_Types.ini");
-            build.AddRootContentEntity(typeof(cContentEntityHardCodeN2Files), @"F:\Transporter\Automation\Build System\config\hard_n2.txt");
-            build.AddRootContentEntity(typeof(cContentEntityHardCodeFiles), @"F:\Transporter\Automation\Build System\config\hard_code.txt");
-
             build.ProductInternalName = "Category_C";
             build.ProjectPath = @"F:\Transporter\Project";
+
+            build.AddRootContentEntity(typeof(cContentEntityGameTypesIni), @"F:\Transporter\Automation\Build System\config\Game_Types.ini");
 
             build.Rebuild();
 

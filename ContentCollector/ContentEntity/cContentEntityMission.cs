@@ -33,6 +33,14 @@ namespace ContentCollector
             }
             #endregion
 
+            #region MissionObjects
+            foreach (XmlNode node in xmlDoc.GetElementsByTagName("MissionObjects"))
+            {
+                if (node.Attributes != null && node.Attributes["File"] != null)
+                    build.AddContentEntity(typeof(cContentEntitySimple), node.Attributes["File"].Value, this);
+            }
+            #endregion
+
             #region Tips
             foreach (XmlNode node in xmlDoc.GetElementsByTagName("Tip"))
             {

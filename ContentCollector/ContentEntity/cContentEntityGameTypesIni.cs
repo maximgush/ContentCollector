@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
@@ -12,6 +13,8 @@ namespace ContentCollector
 {
     public class cContentEntityGameTypesIni : cContentEntitySimple
     {
+        public string BuildType = "";
+
         public cContentEntityGameTypesIni()
         {
         }
@@ -25,12 +28,41 @@ namespace ContentCollector
         [DllImport("kernel32", CharSet = CharSet.Unicode)]
         static extern int GetPrivateProfileString(string Section, string Key, string Default, StringBuilder RetVal, int Size, string FilePath);
 
-        public override void Parse(cBuild build)
+        private bool GetBoolValue(string key, bool defaultValue = false)
         {
             StringBuilder stringBuilder = new StringBuilder(255);
+            GetPrivateProfileString(BuildType, key, defaultValue.ToString(), stringBuilder, 255, Name);
+            return stringBuilder.ToString().ToLower() == "true";
+        }
+
+        private string GetStringValue(string key, string defaultValue = "")
+        {
+            StringBuilder stringBuilder = new StringBuilder(255);
+            GetPrivateProfileString(BuildType, key, defaultValue, stringBuilder, 255, Name);
+            return stringBuilder.ToString();
+        }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public override void Parse(cBuild build)
+        {
+            BuildType = build.ProductInternalName;
+
+            StringBuilder stringBuilder = new StringBuilder(255);
+
+            string GUI_Folder_Name = "pro";                 
+            
+            build.Seasons.Add("winter");
+            if (GetBoolValue("SeasonAutumn", false))
+                build.Seasons.Add("autumn");
+
+            string patches_AdditionalContent = GetStringValue("Patches_AdditionalContent", "");
+            if (patches_AdditionalContent != "")
+            {
+                foreach (var celebration in patches_AdditionalContent.Split(';'))
+                    build.Celebrations.Add(celebration); 
+            }         
 
             #region PlayerCars
-                GetPrivateProfileString(build.ProductInternalName, "cars", "", stringBuilder, 255, Name);
+                GetPrivateProfileString(BuildType, "cars", "", stringBuilder, 255, Name);
                 string cars = stringBuilder.ToString();
                 cars = cars.Trim(new char[] {'[', ']', ' '});
                 string[] carNumbers = cars.Split(',');
@@ -41,13 +73,13 @@ namespace ContentCollector
 
             #region Missions
             {
-                GetPrivateProfileString(build.ProductInternalName, "MissionsSubdir", "n/a", stringBuilder, 255, Name);
+                GetPrivateProfileString(BuildType, "MissionsSubdir", "n/a", stringBuilder, 255, Name);
                 string missionSubdirPath = @"data\missions" + (stringBuilder.ToString() != "n/a" ? @"\" + stringBuilder.ToString() : "");
 
                 int index = 1;
                 while (true)
                 {
-                    GetPrivateProfileString(build.ProductInternalName, "mission_" + index.ToString(), "", stringBuilder, 255, Name);
+                    GetPrivateProfileString(BuildType, "mission_" + index.ToString(), "", stringBuilder, 255, Name);
                     string mission = stringBuilder.ToString();
 
                     if (mission == "")
@@ -67,7 +99,7 @@ namespace ContentCollector
                 int index = 1;
                 while (true)
                 {
-                    GetPrivateProfileString(build.ProductInternalName, "Location_db_" + index.ToString(), "", stringBuilder, 255, Name);
+                    GetPrivateProfileString(BuildType, "Location_db_" + index.ToString(), "", stringBuilder, 255, Name);
                     string locationDb3 = stringBuilder.ToString();
 
                     if (locationDb3 == "")
@@ -82,13 +114,13 @@ namespace ContentCollector
 
             #region LocationGuiImage
             {
-                GetPrivateProfileString(build.ProductInternalName, "GUI_Folder_Name", "", stringBuilder, 255, Name);
+                GetPrivateProfileString(BuildType, "GUI_Folder_Name", "", stringBuilder, 255, Name);
                 string guiFolderName = stringBuilder.ToString();
 
                 int index = 1;                
                 while (true)
                 {
-                    GetPrivateProfileString(build.ProductInternalName, "Location_" + index.ToString(), "", stringBuilder, 255, Name);
+                    GetPrivateProfileString(BuildType, "Location_" + index.ToString(), "", stringBuilder, 255, Name);
                     string locationGuiImage = stringBuilder.ToString();
 
                     if (locationGuiImage == "")
@@ -108,7 +140,7 @@ namespace ContentCollector
 
             #region Languages
             {
-                GetPrivateProfileString(build.ProductInternalName, "Language", "", stringBuilder, 255, Name);
+                GetPrivateProfileString(BuildType, "Language", "", stringBuilder, 255, Name);
                 string languages = stringBuilder.ToString();
                 languages = languages.Trim(new char[] {'[', ']', ' '});
                 string[] languageArray = languages.Split(',');
@@ -123,7 +155,7 @@ namespace ContentCollector
 
             #region GUI_Folder
             {
-                GetPrivateProfileString(build.ProductInternalName, "GUI_Folder_Name", "", stringBuilder, 255, Name);
+                GetPrivateProfileString(BuildType, "GUI_Folder_Name", "", stringBuilder, 255, Name);
                 string guiFolderName = stringBuilder.ToString();
 
                 string path = build.GetManglePath(@"data\gui\" + guiFolderName + @"\imagesets\");
@@ -191,6 +223,159 @@ namespace ContentCollector
                     string name = build.GetRelativePath(file);
                     build.AddContentEntity(typeof(cContentEntitySimple), name, this);
                 }  
+            }
+            #endregion
+
+            #region HardCodeFiles
+            {
+                string directory = Path.GetDirectoryName(Name) + "\\";
+
+                build.AddContentEntity(typeof(cContentEntityHardCodeFiles), directory + @"hard_code.txt",this);
+                build.AddContentEntity(typeof(cContentEntityHardCodeN2Files), directory + @"hard_n2.txt",this);
+                build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files.txt", this);
+                build.AddContentEntity(typeof(cContentEntityHardCodeFilesDataConfig), directory + @"data_config_files.txt", this);
+
+
+                if (BuildType == "Home")
+                {
+                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_Home.txt", this);
+                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesDataConfig), directory + @"data_config_files_Home.txt", this);
+
+                }
+
+                if (BuildType == "HomeRu")
+                {
+                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_HomeRu.txt", this);
+                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesDataConfig), directory + @"data_config_files_Home.txt", this);
+
+                }
+
+                if (BuildType == "CCD_Steam")
+                {
+                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_CCD_Steam.txt", this);
+                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesDataConfig), directory + @"data_config_files_CCD_Steam.txt", this);
+                }
+
+                if (BuildType == "MGI")
+                {
+                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_MGI.txt", this);
+                    build.AddContentEntity(typeof(cContentEntityHardCodeFiles), directory + @"hard_code_MGI.txt",this);
+                }
+
+                if (BuildType == "Autobahn")
+                {
+                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_Autobahn.txt", this);
+                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesDataConfig), directory + @"data_config_files_Autobahn.txt", this);
+                }
+
+                if (GetBoolValue("Simulator"))
+                {
+                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_Simulator.txt", this);
+                }
+                if (GetBoolValue("Net"))
+                {
+                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_Net.txt", this);
+                }
+
+                if (GetStringValue("Psychophysics","") == "full")
+                {
+                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_Psychophysics.txt", this);
+                }
+                else if (GetStringValue("Psychophysics", "") == "lite")
+                {
+                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_Psychophysics_lite.txt", this);
+                }
+
+                if (GetBoolValue("VlcCamera",false))
+                {
+                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_vlc.txt", this);
+                }
+
+                if (GetBoolValue("ffmpegCamera",false))
+                {
+                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_ffmpeg.txt", this);
+                    
+                }
+
+                if (BuildType == "Home" || BuildType == "HomeRu" || BuildType == "CCD_Kids" || BuildType == "CCD_Steam")
+                {
+                    build.AddContentEntity(typeof(cContentEntityHardCodeFiles), directory + @"hard_code_Home.txt", this);
+                }
+
+                if (BuildType != "Home" && BuildType != "HomeRu" && BuildType != "KSI" && BuildType != "Autobahn" && BuildType != "CCD_Steam")
+                {
+                    build.AddContentEntity(typeof(cContentEntityHardCodeFiles), directory + @"hard_code_Pro.txt", this);
+                }
+
+                if (BuildType == "Autocrane_Net" || BuildType == "Autocrane")
+                {
+                    build.AddContentEntity(typeof(cContentEntityHardCodeFiles), directory + @"hard_code_Autocrane.txt", this);
+                }
+
+                if (BuildType.ToLower().IndexOf("crane") >= 0)
+                {
+                    build.AddContentEntity(typeof(cContentEntityDirectory), directory + @"data_gamedata_defender.txt", this);
+                }                                                                                 
+
+                //"data_scripts.lua_files.txt"
+            }
+            #endregion
+
+            #region DirectXDependencies
+            foreach (var directX_version in GetStringValue("DirectX","[11]").TrimStart('[').TrimEnd(']').Split(','))
+            {
+                build.AddContentEntity(typeof(cContentEntitySimple), @"bin\win32\d3d" + directX_version + "renderer.dll", this);
+                build.AddContentEntity(typeof(cContentEntitySimple), @"bin\win32\CEGUIDirect3D" + directX_version + "Renderer.dll", this);
+            }
+            #endregion
+
+            //                         if 0 < directX_versions.count('9'):
+//                 shaders_list.main(r, global_config.app_dir + 'data//shaders//dx9//renderpath.xml', languages, lang_associations)
+//                 shaders_list.main(r, global_config.app_dir + 'data//shaders//dx9//renderpath_lite.xml', languages, lang_associations)
+//                 shaders_list.main(r, global_config.app_dir + 'data//shaders//dx9//renderpath_ultralite.xml', languages, lang_associations)
+//             
+//             if 0 < directX_versions.count('11'):            
+//                 shaders_list.main(r, global_config.app_dir + 'data//shaders//dx11//renderpath.xml', languages, lang_associations)
+//             
+//             shaders_list.main(r, global_config.app_dir + 'data//shaders//shaders.xml', languages, lang_associations)
+
+//             def main(r, shader_list, languages, lang_associations):
+//     # функция вырывания перечня текстур из xml файлов шейдеров
+//     
+//     if os.path.exists(shader_list):
+//         dom = xml.dom.minidom.parse(shader_list)
+//         for node in dom.getElementsByTagName('Texture'):
+//             n = node.getAttribute("value")
+//             if n[0:8] == "textures":
+//                 n = "export/textures/" + n[9:]
+//                 n2_search.outputTexture(r, n, languages, lang_associations) # if it is not texture, this wont hurt
+
+            #region OtherEntities
+            {
+                build.AddContentEntity(typeof(cContentEntitySimple),@"bin\win32\gui_" + GetStringValue(GUI_Folder_Name,"pro") + ".dll", this);
+
+                string DefaultKeybindOverride = GetStringValue("DefaultKeybindOverride", @"n/a");
+                if (DefaultKeybindOverride != @"n/a")
+                    build.AddContentEntity(typeof(cContentEntitySimple), build.GetManglePath(@"data\config\" + DefaultKeybindOverride), this);
+
+                build.AddContentEntity(typeof(cContentEntitySimple), @"data\i18n\associations.txt", this);
+                build.AddContentEntity(typeof(cContentEntitySimple), @"data\i18n\language.txt", this);
+
+                build.AddContentEntity(typeof(cContentEntityDirectory), @"data\config\licenseplates", this);
+                build.AddContentEntity(typeof(cContentEntityDirectory), @"data\config\ai", this);
+
+                build.AddContentEntity(typeof(cContentEntitySimple), @"data\i18n\language", this);
+
+                string rulesLocales = GetStringValue("Patches_AdditionalContent", "");
+                if (rulesLocales != "")
+                {
+                    foreach (var rules in rulesLocales.Split(';'))
+                        build.AddContentEntity(typeof(cContentEntitySimple), @"data\config\rules\" + rules + ".ini", this);
+                }
+                else
+                    build.AddContentEntity(typeof(cContentEntitySimple), @"data\config\rules\ru_RU.ini", this);
+
+                build.AddContentEntity(typeof(cContentEntityPassengers), @"data\config\passengers.ini", this);
             }
             #endregion
         }

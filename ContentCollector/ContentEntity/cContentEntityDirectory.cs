@@ -4,25 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.IO;
 
 namespace ContentCollector
 {
-    public class cContentEntityTexture : cContentEntitySimple
+    public class cContentEntityDirectory : cContentEntitySimple
     {
         override public string FileName { get { return null; } }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
-            string texturesName = Name.Replace("(logic)","").Replace(@"\textures\", @"\texturesdds\");
-            if (!texturesName.EndsWith(".dds"))
+            string path = build.GetManglePath(Name);
+            foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories))
             {
-                texturesName = texturesName + ".dds";
-                build.AddContentEntity(typeof(cContentEntitySimple), texturesName, this);
+                string name = build.GetRelativePath(file);
+                build.AddContentEntity(typeof(cContentEntitySimple), name, this);
             }
-            
-            //TODO: Добавление текстур соответствующих сезону
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    }   // сContentEntityPlayerCar
+    }   // cContentEntityDirectory
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }   // сContentCollector
