@@ -10,7 +10,7 @@ namespace ContentCollector
 {
     public class cContentEntityHardCodeFilesDataConfig : cContentEntityHardCodeFiles
     {
-        override public string IntermediateDir { get { return "data\\config\\"} }
+        override public string IntermediateDir { get { return "data\\config\\"; } }
     }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }   // сContentCollector
