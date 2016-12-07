@@ -52,13 +52,7 @@ namespace ContentCollector
             while (!reader.EndOfStream)
             {
                 string str =  reader.ReadLine();
-                str = str.Replace("home:", "");
-                str = str.Replace(":", "\\");
-                str = str.Replace("/", "\\");
-                str = str.Replace("/", "\\");
-                str = str.Replace("\\\\", "\\");
-                str = str.Replace("\\\\", "\\");
-                str = str.TrimStart(new char[] { '\\', '/' });
+                Utils.GetNormalPath(ref str);
                 files.Add(str);
             }
             reader.Close();

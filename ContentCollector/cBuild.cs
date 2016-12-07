@@ -122,13 +122,7 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void AddContentEntity(System.Type entityType, string name, cContentEntitySimple parent, bool isRoot = false)
         {
-            // TODO: Переделать этот костыль
-            name = name.Replace("home:", "");
-            name = name.Replace(":", "\\");
-            name = name.Replace("/", "\\");
-            name = name.Replace("\\\\","\\");
-            name = name.Replace("\\\\", "\\");
-            name = name.ToLower();
+            Utils.GetNormalPath(ref name);
 
 #if MULTITHREADING
             bool lockTaken = false;
@@ -223,7 +217,6 @@ namespace ContentCollector
             {
                 while (mQueryContentEntitiesToParse.Count > 0)
                 {
-//                    while (events.Count >= 64) ;
                     cContentEntitySimple entity = null;
                     if (mQueryContentEntitiesToParse.TryDequeue(out entity))
                     {
@@ -232,9 +225,7 @@ namespace ContentCollector
                                                         arg =>
                                                         {
                                                             entity.Parse(this);
-//                                                            resetEvent.Set();
                                                         });
-//                        events.Add(resetEvent);
                     }
                 }
 
@@ -242,7 +233,6 @@ namespace ContentCollector
                 System.Threading.ThreadPool.GetAvailableThreads(out availThreads, out placeHolder);
                 if (availThreads != maxThreads)
                     System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(50));
-//                WaitHandle.WaitAll(events.ToArray());
             }            
 #else
             while (mQueryContentEntitiesToParse.Count > 0)

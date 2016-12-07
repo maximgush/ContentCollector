@@ -26,6 +26,17 @@ namespace ContentCollector
             return result;
         }
 
+        public static void GetNormalPath(ref string name)
+        {
+            name = name.Replace("home:", "");
+            name = name.Replace(":", "\\");
+            name = name.Replace("/", "\\");
+            name = name.TrimStart(new char[] { '\\' });
+            name = name.Replace("\\\\","\\");
+            name = name.Replace("\\\\", "\\");
+            name = name.ToLower();
+        }
+
         static public void CompareContent(string contentFile1, string contentFile2, string resultFile)
         {
             HashSet<string> content1 = new HashSet<string>();
@@ -40,13 +51,7 @@ namespace ContentCollector
             {
                 string file = reader2.ReadLine();
 
-                file = file.Replace("home:", "");
-                file = file.Replace(":", "\\");
-                file = file.Replace("/", "\\");
-                file = file.Replace("\\\\", "\\");
-                file = file.Replace("\\\\", "\\");
-                file = file.TrimStart(new char[] { '\\' });
-                file = file.ToLower();
+                Utils.GetNormalPath(ref file);
                 content2.Add(file);
             }
             reader2.Close();
