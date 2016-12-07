@@ -46,7 +46,12 @@ namespace ContentCollector
             {
                 if (node.Attributes != null && node.Attributes["RulesControlScript"] != null)
                 {
-                    build.AddContentEntity(typeof(cContentEntityRulesControl), node.Attributes["RulesControlScript"].Value, this);
+                    string[] scripts = node.Attributes["RulesControlScript"].Value.Split(';');
+                    foreach (string script in scripts)
+                    {
+                        build.AddContentEntity(typeof(cContentEntityRulesControl), script, this);
+                    }
+                    
                 }
             }
             #endregion 
