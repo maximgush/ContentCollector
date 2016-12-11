@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace ContentCollector
 {
@@ -48,9 +49,11 @@ namespace ContentCollector
             if (val.Length > 0)
             {
                 build.AddContentEntity(typeof(cContentEntitySimple), @"data\audio\" + val + ".xsb", this);
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\audio\" + val + ".xwb", this);   
-            }
+                build.AddContentEntity(typeof(cContentEntitySimple), @"data\audio\" + val + ".xwb", this);
 
+                build.AddContentEntity(typeof(cContentEntitySimple), @"data\audio\traffic_" + val + ".xsb", this);
+                build.AddContentEntity(typeof(cContentEntitySimple), @"data\audio\traffic_" + val + ".xwb", this);   
+            }
 
             // [Common]
             // TuningConfigPath = "cars/Car01/tuning.xml"
@@ -64,7 +67,29 @@ namespace ContentCollector
             GetPrivateProfileString("Cameras", "CameraProfile", "", stringBuilder, 255, fileName);
             val = stringBuilder.ToString();
             if (val.Length > 0)
-                build.AddContentEntity(typeof(cContentEntitySimple),@"data\gamedata\" + val,this);        
+                build.AddContentEntity(typeof(cContentEntitySimple),@"data\gamedata\" + val,this);   
+     
+            // [Humans]
+            // DriverAnimatedModel = (Driver="cars/Car34/driver", Wheel="cars/Car34/wheel")
+            GetPrivateProfileString("Humans", "DriverAnimatedModel", "", stringBuilder, 255, fileName);
+            val = stringBuilder.ToString();
+            if (val.Length > 0)
+            {
+                Regex regex = new Regex("Driver=\"([^\\r\\n\"]+)\"");
+                Match match = regex.Match(val);
+
+               if (match.Success)
+                    build.AddContentEntity(typeof(cContentEntityN2), @"export\gfxlib\" + match.Groups[1].Value + ".n2", this);
+
+               regex = new Regex("Wheel=\"([^\\r\\n\"]+)\"");
+               match = regex.Match(val);
+
+               if (match.Success)
+                   build.AddContentEntity(typeof(cContentEntityN2), @"export\gfxlib\" + match.Groups[1].Value + ".n2", this);
+
+
+            }
+
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }   // сContentEntityPlayerCar
