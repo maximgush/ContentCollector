@@ -19,7 +19,13 @@ namespace ContentCollector
             while (!reader.EndOfStream)
             {
                 string file = IntermediateDir + reader.ReadLine();
-                build.AddContentEntity(typeof(cContentEntitySimple), file, this);
+                Utils.GetNormalPath(ref file);
+                if (Path.GetExtension(file) == ".tga" || Path.GetExtension(file) == ".dds")
+                    build.AddContentEntity(typeof(cContentEntityTextureTga), "(logic)" + file, this);
+                else if  (Path.GetExtension(file) == ".ini" && file.Contains(@"\physics\"))
+                    build.AddContentEntity(typeof(cContentEntityPhysicsIni), file, this);
+                else
+                    build.AddContentEntity(typeof(cContentEntitySimple), file, this);
             }
             reader.Close();              
         }

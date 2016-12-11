@@ -40,6 +40,9 @@ namespace ContentCollector
 
             // тематические зоны
             build.AddContentEntity(typeof(cContentEntitySimple), @"export\levels\" + city + "\\" + location + "_zones.xml", this);
+
+            // ??
+            build.AddContentEntity(typeof(cContentEntitySimple), @"export\meshes\locations\" + city + "\\" + location + @"\foliage.fbin", this);
         }
     }   // cContentEntityLocation
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

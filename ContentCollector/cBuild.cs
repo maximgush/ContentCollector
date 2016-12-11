@@ -88,7 +88,7 @@ namespace ContentCollector
         [XmlArrayItem("cContentEntityLocationPstatic", Type = typeof(cContentEntityLocationPstatic))]
         
         [XmlArrayItem("cContentEntityN2", Type = typeof(cContentEntityN2))]
-        [XmlArrayItem("cContentEntityTexture", Type = typeof(cContentEntityTexture))]
+        [XmlArrayItem("cContentEntityTextureTga", Type = typeof(cContentEntityTextureTga))]
         [XmlArrayItem("cContentEntityLanguage", Type = typeof(cContentEntityLanguage))]
 
         [XmlArrayItem("cContentEntityHardCodeFiles", Type = typeof(cContentEntityHardCodeFiles))]

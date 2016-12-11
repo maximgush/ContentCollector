@@ -322,33 +322,23 @@ namespace ContentCollector
             #endregion
 
             #region DirectXDependencies
-            foreach (var directX_version in GetStringValue("DirectX","[11]").TrimStart('[').TrimEnd(']').Split(','))
+
             {
-                build.AddContentEntity(typeof(cContentEntitySimple), @"bin\win32\d3d" + directX_version + "renderer.dll", this);
-                build.AddContentEntity(typeof(cContentEntitySimple), @"bin\win32\CEGUIDirect3D" + directX_version + "Renderer.dll", this);
+                string directXStr = GetStringValue("DirectX", "[11]");
+                foreach (var directX_version in directXStr.TrimStart('[').TrimEnd(']').Split(','))
+                {
+                    build.AddContentEntity(typeof(cContentEntitySimple), @"bin\win32\d3d" + directX_version + "renderer.dll", this);
+                    build.AddContentEntity(typeof(cContentEntitySimple), @"bin\win32\CEGUIDirect3D" + directX_version + "Renderer.dll", this);
+                    build.AddContentEntity(typeof(cContentEntityDirectory), @"data\shaders\dx" + directX_version, this);
+                }
+
+                #region  shaders
+                {
+                    build.AddContentEntity(typeof(cContentEntityShadersXml), @"data\shaders\shaders.xml", this);                   
+                }
+                #endregion
             }
             #endregion
-
-            //                         if 0 < directX_versions.count('9'):
-//                 shaders_list.main(r, global_config.app_dir + 'data//shaders//dx9//renderpath.xml', languages, lang_associations)
-//                 shaders_list.main(r, global_config.app_dir + 'data//shaders//dx9//renderpath_lite.xml', languages, lang_associations)
-//                 shaders_list.main(r, global_config.app_dir + 'data//shaders//dx9//renderpath_ultralite.xml', languages, lang_associations)
-//             
-//             if 0 < directX_versions.count('11'):            
-//                 shaders_list.main(r, global_config.app_dir + 'data//shaders//dx11//renderpath.xml', languages, lang_associations)
-//             
-//             shaders_list.main(r, global_config.app_dir + 'data//shaders//shaders.xml', languages, lang_associations)
-
-//             def main(r, shader_list, languages, lang_associations):
-//     # функция вырывания перечня текстур из xml файлов шейдеров
-//     
-//     if os.path.exists(shader_list):
-//         dom = xml.dom.minidom.parse(shader_list)
-//         for node in dom.getElementsByTagName('Texture'):
-//             n = node.getAttribute("value")
-//             if n[0:8] == "textures":
-//                 n = "export/textures/" + n[9:]
-//                 n2_search.outputTexture(r, n, languages, lang_associations) # if it is not texture, this wont hurt
 
             #region OtherEntities
             {
@@ -358,14 +348,15 @@ namespace ContentCollector
                 if (DefaultKeybindOverride != @"n/a")
                     build.AddContentEntity(typeof(cContentEntitySimple), build.GetManglePath(@"data\config\" + DefaultKeybindOverride), this);
 
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\i18n\associations.txt", this);
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\i18n\language.txt", this);
+                build.AddContentEntity(typeof(cContentEntityDirectory), @"data\scripts", this);
+                build.AddContentEntity(typeof(cContentEntityDirectory), @"data\profiles", this);
 
                 build.AddContentEntity(typeof(cContentEntityDirectory), @"data\config\licenseplates", this);
-                build.AddContentEntity(typeof(cContentEntityDirectory), @"data\config\ai", this);
+                build.AddContentEntity(typeof(cContentEntityDirectory), @"data\config\ai", this);           
 
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\i18n\language", this);
-
+                build.AddContentEntity(typeof(cContentEntitySimple), @"data\i18n\associations.txt", this);
+                build.AddContentEntity(typeof(cContentEntitySimple), @"data\i18n\language.txt", this);     
+                
                 string rulesLocales = GetStringValue("Patches_AdditionalContent", "");
                 if (rulesLocales != "")
                 {
@@ -376,6 +367,8 @@ namespace ContentCollector
                     build.AddContentEntity(typeof(cContentEntitySimple), @"data\config\rules\ru_RU.ini", this);
 
                 build.AddContentEntity(typeof(cContentEntityPassengers), @"data\config\passengers.ini", this);
+
+                build.AddContentEntity(typeof(cContentEntityTrafficCarsXml), @"data\config\traffic_cars.xml", this);
             }
             #endregion
         }

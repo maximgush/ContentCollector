@@ -60,7 +60,7 @@ namespace ContentCollector
             GetPrivateProfileString("Common", "TuningConfigPath", "", stringBuilder, 255, fileName);
             val = stringBuilder.ToString();
             if (val.Length > 0)
-                build.AddContentEntity(typeof(cContentEntitySimple),@"data\gamedata\" + val,this);
+                build.AddContentEntity(typeof(cContentEntityTuningXml),@"data\gamedata\" + val,this);
 
             // [Cameras]
             // CameraProfile="cars/Car01/cameras.xml"

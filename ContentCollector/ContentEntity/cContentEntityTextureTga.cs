@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace ContentCollector
 {
-    public class cContentEntityTexture : cContentEntitySimple
+    public class cContentEntityTextureTga: cContentEntitySimple
     {
         override public string FileName { get { return null; } }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,8 +17,8 @@ namespace ContentCollector
             if (!texturesName.EndsWith(".dds"))
             {
                 texturesName = texturesName + ".dds";
-                build.AddContentEntity(typeof(cContentEntitySimple), texturesName, this);
             }
+            build.AddContentEntity(typeof(cContentEntityTextureDds), texturesName, this);
 
             AddEntityVariants(build);
         }

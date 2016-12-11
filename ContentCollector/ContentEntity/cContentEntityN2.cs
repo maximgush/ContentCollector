@@ -31,7 +31,7 @@ namespace ContentCollector
 
                 while (match.Success)
                 {
-                    build.AddContentEntity(typeof(cContentEntityTexture), "(logic)" + match.Groups[1].Value, this);
+                    build.AddContentEntity(typeof(cContentEntityTextureTga), "(logic)" + match.Groups[1].Value, this);
                     match = match.NextMatch();
                 }
             }
