@@ -20,7 +20,7 @@ namespace ContentCollector
             build.AddContentEntity(typeof(cContentEntityCarProperty), @"data\gamedata\cars\" + carName + @"\CarProperty.ini", this);
 
             // p_player_setup.ini
-            build.AddContentEntity(typeof(cContentEntityCarPhysicsProperty), @"data/physics/cars/" + Name + @"\p_traffic_setup.ini", this);
+            build.AddContentEntity(typeof(cContentEntityCarPhysicsProperty), @"data/physics/cars/" + carName + @"\p_traffic_setup.ini", this);
 
             // n2
             string path = build.GetManglePath("export\\gfxlib\\cars\\" + carName);
