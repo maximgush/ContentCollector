@@ -19,8 +19,8 @@ namespace ContentCollector
                 texturesName = texturesName + ".dds";
                 build.AddContentEntity(typeof(cContentEntitySimple), texturesName, this);
             }
-            
-            //TODO: Добавление текстур соответствующих сезону
+
+            AddEntityVariants(build);
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }   // сContentEntityPlayerCar
