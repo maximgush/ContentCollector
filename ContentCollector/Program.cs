@@ -49,7 +49,8 @@ namespace ContentCollector
             {
                 string str =  reader.ReadLine();
                 Utils.GetNormalPath(ref str);
-                files.Add(str);
+                if (build.ExistFileInProject(str))
+                    files.Add(str);
             }
             reader.Close();
 
