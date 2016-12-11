@@ -71,9 +71,6 @@ namespace ContentCollector
                     setUniqueFromContent2.Add(file);
             }
 
-            bool k = content1.Contains(@"export\texturesdds\characters\passangers\man_01.tga.dds");
-            bool p = content2.Contains(@"export\texturesdds\characters\passangers\man_01.tga.dds");
-
             foreach (var file in content1)
             {
                 if (!content2.Contains(file))
