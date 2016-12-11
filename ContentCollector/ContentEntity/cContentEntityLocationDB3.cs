@@ -60,8 +60,8 @@ namespace ContentCollector
                     string physics = r["Physics"].ToString();
                     if (physics != "" && physics != "static")
                     {
-                        string name = @"data\physics\" + physics + ".n2";
-                        build.AddContentEntity(typeof(cContentEntityN2), name, this);   
+                        string name = @"data\physics\" + physics;
+                        build.AddContentEntity(typeof(cContentEntityPhysicsIni), name, this);   
                     }
                 }
                 r.Close();
@@ -77,7 +77,7 @@ namespace ContentCollector
                 SQLiteDataReader r = cmd.ExecuteReader();
                 while (r.Read())
                 {
-                    string name = "ParkingCar:" + r["Physics"].ToString().Replace("/p_parking_setup.ini","");
+                    string name = "ParkingCar\\" + r["Physics"].ToString().Replace("/p_parking_setup.ini","");
                     build.AddContentEntity(typeof(cContentEntityParkingCar), name, this);
                 }
                 r.Close();
@@ -85,6 +85,8 @@ namespace ContentCollector
             #endregion
 
             conn.Dispose();
+
+            AddEntityVariants(build);
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }   // cContentEntityMission
