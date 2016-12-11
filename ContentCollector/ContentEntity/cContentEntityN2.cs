@@ -14,10 +14,9 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
-            if (!build.ExistFileInProject(Name))
-                return;
-
             string fileName = build.GetManglePath(Name);
+            if (!File.Exists(fileName))
+                return;
 
             StreamReader reader = new StreamReader(new FileStream(fileName, FileMode.Open));
             string n2fileText = reader.ReadToEnd();
@@ -67,6 +66,16 @@ namespace ContentCollector
                 }
             }
             #endregion  
+
+            #region hkx
+            {
+                string hkx_fileName = Name.Replace("\\gfxlib\\","\\meshes\\").Replace(".n2", "_c_0.hkx");
+                if (build.ExistFileInProject(hkx_fileName))
+                    build.AddContentEntity(typeof(cContentEntitySimple), hkx_fileName, this);
+            }
+            #endregion
+
+            AddEntityVariants(build);
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }   // cContentEntityN2
