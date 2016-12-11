@@ -32,6 +32,9 @@ namespace ContentCollector
         private Dictionary<string, cContentEntitySimple> mContentDictionary = new Dictionary<string, cContentEntitySimple>();
         private ConcurrentQueue<cContentEntitySimple> mQueryContentEntitiesToParse = new ConcurrentQueue<cContentEntitySimple>();
 
+        // Список всех файлов проекта (кэш для быстрой проверки существования файлов)
+        HashSet<string> mAllFilesInProjectSet = new HashSet<string>();
+
         private SpinLock spLock = new SpinLock();
 
         public string ProjectPath
@@ -248,6 +251,8 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void Rebuild()
         {
+            BuildAllFilesInProjectSet();
+
             foreach (var pair_name_entity in mContentDictionary)
             {
                 cContentEntitySimple entity = pair_name_entity.Value;
@@ -305,11 +310,26 @@ namespace ContentCollector
         {
             return ProjectPath + "\\" + path.Replace("(logic)", "");
         }
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string GetRelativePath(string path)
         {
             return path.Replace(ProjectPath + "\\","");
         }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private void BuildAllFilesInProjectSet()
+        {            
+            foreach (string file in Directory.EnumerateFiles(ProjectPath, "*.*", SearchOption.AllDirectories))
+            {
+                string name = GetRelativePath(file);
+                mAllFilesInProjectSet.Add(name);
+            }
+        }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public bool ExistFileInProject(string path)
+        {
+            return mAllFilesInProjectSet.Contains(path);
+        }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }   // сBuild
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }   // ContentCollector

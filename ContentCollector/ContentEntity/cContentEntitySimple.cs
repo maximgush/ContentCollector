@@ -85,12 +85,15 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public bool HasParentEntities() { return m_parentContentEntities.Count > 0; }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public virtual void Parse(cBuild build) {}
+        public virtual void Parse(cBuild build)
+        {
+            AddEntityVariants(build);
+        }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public virtual void AddEntityVariants(cBuild build)
         {
             string fileName = Path.GetFileName(Name);
-            string directory = Path.GetDirectoryName(build.GetManglePath(build.GetRelativePath(Name))) + "\\";
+            string directory = Path.GetDirectoryName(build.GetRelativePath(Name)) + "\\";
 
             // Выделяем расширение файла
             // Это делается таким сложным способом (вместо File.GetExtension(...)) поскольку у нас есть файлы с несколькими расширениями
@@ -113,7 +116,7 @@ namespace ContentCollector
                         string suffixLocale = locale != "" ? '_' + locale : "";
                         string path = directory + prefix + fileName + suffixLocale + suffixCelebration + extension;
 
-                        if (File.Exists(build.GetManglePath(path)))
+                        if (build.ExistFileInProject(path))
                             build.AddContentEntity(this.GetType(), path, this);
                         else if (build.LocaleAssociations.ContainsKey(locale))
                         {
@@ -121,7 +124,7 @@ namespace ContentCollector
                             {
                                 suffixLocale = localeAssociation != "" ? '_' + localeAssociation : "";
                                 path = directory + prefix + fileName + suffixLocale + suffixCelebration + extension;
-                                if (File.Exists(build.GetManglePath(path)))
+                                if (build.ExistFileInProject(path))
                                     build.AddContentEntity(this.GetType(), path, this);
                             }
                         }

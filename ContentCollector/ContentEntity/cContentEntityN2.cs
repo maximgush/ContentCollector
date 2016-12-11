@@ -14,9 +14,10 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
-            string fileName = build.GetManglePath(Name);
-            if (!File.Exists(fileName))
+            if (!build.ExistFileInProject(Name))
                 return;
+
+            string fileName = build.GetManglePath(Name);
 
             StreamReader reader = new StreamReader(new FileStream(fileName, FileMode.Open));
             string n2fileText = reader.ReadToEnd();
