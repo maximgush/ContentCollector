@@ -22,7 +22,7 @@ namespace ContentCollector
 
             // [Common]
             // PhysicsFile = "meshes:Devices/Device08/device_p.hkx"
-            GetPrivateProfileString("Common", "PhysicsFile", "", stringBuilder, 255, fileName);
+            GetPrivateProfileString("Common", "PhysicsFiles", "", stringBuilder, 255, fileName);
             val = stringBuilder.ToString();
             if (val.Length > 0)
             {
