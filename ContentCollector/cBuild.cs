@@ -320,7 +320,7 @@ namespace ContentCollector
         {            
             foreach (string file in Directory.EnumerateFiles(ProjectPath, "*.*", SearchOption.AllDirectories))
             {
-                string name = GetRelativePath(file);
+                string name = GetRelativePath(file).ToLower();
                 mAllFilesInProjectSet.Add(name);
             }
         }
