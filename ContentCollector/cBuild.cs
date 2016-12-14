@@ -127,15 +127,16 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void AddContentEntity(cContentEntitySimple entity)
         {
+            string dictionaryName = entity.Name + "(" + entity.GetType().ToString() + ")";
 #if MULTITHREADING
             bool lockTaken = false;
             try
             {
                 spLock.Enter(ref lockTaken);
 #endif
-                if (mContentDictionary.ContainsKey(entity.Name))
+                if (mContentDictionary.ContainsKey(dictionaryName))
                 {
-                    cContentEntitySimple extistEntity = mContentDictionary[entity.Name];
+                    cContentEntitySimple extistEntity = mContentDictionary[dictionaryName];
                     if (extistEntity.GetType() != entity.GetType())
                         MessageBox.Show("Элемент с таким именем уже существует под другим типом!");
 
@@ -143,7 +144,7 @@ namespace ContentCollector
                 }
                 else
                 {
-                    mContentDictionary.Add(entity.Name, entity);
+                    mContentDictionary.Add(dictionaryName, entity);
                     mQueryContentEntitiesToParse.Enqueue(entity);
                 }
 #if MULTITHREADING
@@ -158,6 +159,7 @@ namespace ContentCollector
         public void AddContentEntity(System.Type entityType, string name, cContentEntitySimple parent)
         {
             Utils.GetNormalPath(ref name);
+            string dictionaryName = name + "(" + entityType.ToString() + ")";
 
 #if MULTITHREADING
             bool lockTaken = false;
@@ -165,9 +167,9 @@ namespace ContentCollector
             {
                 spLock.Enter(ref lockTaken);
 #endif
-                if (mContentDictionary.ContainsKey(name))
+                if (mContentDictionary.ContainsKey(dictionaryName))
                 {
-                    cContentEntitySimple entity = mContentDictionary[name];
+                    cContentEntitySimple entity = mContentDictionary[dictionaryName];
                     if (entity.GetType() != entityType)
                         MessageBox.Show("Элемент с таким именем уже существует под другим типом!");
 
@@ -180,7 +182,7 @@ namespace ContentCollector
                     entity.AddParentContentEntity(parent);
                     parent.AddChildContentEntity(entity);
 
-                    mContentDictionary.Add(entity.Name, entity);
+                    mContentDictionary.Add(dictionaryName, entity);
                     mQueryContentEntitiesToParse.Enqueue(entity);
                 }
 #if MULTITHREADING
@@ -194,10 +196,11 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void RemoveContentEntity(string name)
         {
-            cContentEntitySimple entity = mContentDictionary[name];
-            entity.RemoveYouselfFromChildContentEntities();
-            entity.RemoveYouselfFromParentContentEntities();
-            mContentDictionary.Remove(name);
+            // TODO: Здесь нужно удалить все файлы содержащие name, а не только name
+            //cContentEntitySimple entity = mContentDictionary[name];
+            //entity.RemoveYouselfFromChildContentEntities();
+            //entity.RemoveYouselfFromParentContentEntities();
+            //mContentDictionary.Remove(name);
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void Update(string[] changedFiles)
@@ -206,34 +209,35 @@ namespace ContentCollector
             // Изменённые файлы пересобираются
             // После пересборки всех изменившихся файлов удаляем из контента все файлы на которые нет родительской ссылки (рекурсивно).
 
-            foreach (var changingFileName in changedFiles)
-            {
-                string changingFileNameRelative = changingFileName.Substring(mProjectPath.Length);
-                if (mContentDictionary.ContainsKey(changingFileNameRelative))
-                {
-                    cContentEntitySimple entity = mContentDictionary[changingFileNameRelative];
-                    entity.RemoveYouselfFromChildContentEntities();
-                    mQueryContentEntitiesToParse.Enqueue(entity);
-                }
-            }
-
-            ParseContentEntitiesInQuery();
-
-            List<string> entitiesWithoutParent = new List<string>();
-            do
-            {
-                foreach (var name in entitiesWithoutParent)
-                {
-                    RemoveContentEntity(name);
-                }
-
-                foreach(var pair_name_entity in mContentDictionary)
-                {
-                    if (!pair_name_entity.Value.HasParentEntities())
-                        entitiesWithoutParent.Add(pair_name_entity.Key);
-                }
-            }
-            while (entitiesWithoutParent.Count > 0);
+//             foreach (var changingFileName in changedFiles)
+//             {
+//                 string changingFileNameRelative = changingFileName.Substring(mProjectPath.Length);
+//                 if (mContentDictionary.ContainsKey(changingFileNameRelative))
+//                 {
+//                     // TODO: здесь надо обработать все файлы содежащие в имени changingFileNameRelative, а не только changingFileNameRelative
+//                     cContentEntitySimple entity = mContentDictionary[changingFileNameRelative];
+//                     entity.RemoveYouselfFromChildContentEntities();
+//                     mQueryContentEntitiesToParse.Enqueue(entity);
+//                 }
+//             }
+// 
+//             ParseContentEntitiesInQuery();
+// 
+//             List<string> entitiesWithoutParent = new List<string>();
+//             do
+//             {
+//                 foreach (var name in entitiesWithoutParent)
+//                 {
+//                     RemoveContentEntity(name);
+//                 }
+// 
+//                 foreach(var pair_name_entity in mContentDictionary)
+//                 {
+//                     if (!pair_name_entity.Value.HasParentEntities())
+//                         entitiesWithoutParent.Add(pair_name_entity.Key);
+//                 }
+//             }
+//             while (entitiesWithoutParent.Count > 0);
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void ParseContentEntitiesInQuery()
