@@ -68,7 +68,7 @@ namespace ContentCollector
                 string[] carNumbers = cars.Split(',');
 
                 foreach (var carNumber in carNumbers)
-                    build.AddContentEntity(typeof(cContentEntityPlayerCar), "PlayerCar\\cars\\car" + carNumber, this);
+                    build.AddContentEntity(new cContentEntityPlayerCar("PlayerCar\\cars\\car" + carNumber, this, "car" + carNumber));
             #endregion
 
             #region Missions

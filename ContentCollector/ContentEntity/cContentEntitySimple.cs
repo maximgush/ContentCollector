@@ -14,13 +14,20 @@ namespace ContentCollector
     {
         private string m_name = "";
 
-        private string m_fileName = "";
-
         private ISet<cContentEntitySimple> m_childContentEntities = new HashSet<cContentEntitySimple>();
         private ISet<cContentEntitySimple> m_parentContentEntities = new HashSet<cContentEntitySimple>();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public cContentEntitySimple()
         {
+        }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public cContentEntitySimple(string name, cContentEntitySimple parent)
+        {
+            m_name = name;
+            Utils.GetNormalPath(ref m_name);
+ 
+            if (parent != null)
+                m_parentContentEntities.Add(parent);
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         [XmlAttribute]

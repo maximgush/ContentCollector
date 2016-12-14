@@ -125,7 +125,37 @@ namespace ContentCollector
             mRootEntities.Add(rootEntity);
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public void AddContentEntity(System.Type entityType, string name, cContentEntitySimple parent, bool isRoot = false)
+        public void AddContentEntity(cContentEntitySimple entity)
+        {
+#if MULTITHREADING
+            bool lockTaken = false;
+            try
+            {
+                spLock.Enter(ref lockTaken);
+#endif
+                if (mContentDictionary.ContainsKey(entity.Name))
+                {
+                    cContentEntitySimple extistEntity = mContentDictionary[entity.Name];
+                    if (extistEntity.GetType() != entity.GetType())
+                        MessageBox.Show("Элемент с таким именем уже существует под другим типом!");
+
+                    extistEntity.ParentContentEntities.AddRange(entity.ParentContentEntities);
+                }
+                else
+                {
+                    mContentDictionary.Add(entity.Name, entity);
+                    mQueryContentEntitiesToParse.Enqueue(entity);
+                }
+#if MULTITHREADING
+            }
+            finally
+            {
+                if (lockTaken) spLock.Exit();
+            }
+#endif
+        }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public void AddContentEntity(System.Type entityType, string name, cContentEntitySimple parent)
         {
             Utils.GetNormalPath(ref name);
 
