@@ -44,7 +44,7 @@ namespace ContentCollector
                 while (r.Read())
                 {
                     string name = @"export\gfxlib\" + r["Graphics"].ToString() + ".n2";
-                    build.AddContentEntity(new cContentEntityN2), name, this));
+                    build.AddContentEntity(new cContentEntityN2(name, this));
                 }
                 r.Close();
             }
@@ -63,7 +63,7 @@ namespace ContentCollector
                     if (physics != "" && physics != "static")
                     {
                         string name = @"data\physics\" + physics;
-                        build.AddContentEntity(new cContentEntityPhysicsIni), name, this));   
+                        build.AddContentEntity(new cContentEntityPhysicsIni(name, this));   
                     }
                 }
                 r.Close();
@@ -80,7 +80,7 @@ namespace ContentCollector
                 while (r.Read())
                 {
                     string name = r["Physics"].ToString().Replace("/p_parking_setup.ini","").Replace("cars/","");
-                    build.AddContentEntity(new cContentEntityParkingCar(name, this, name);
+                    build.AddContentEntity(new cContentEntityParkingCar(name, this, name));
                 }
                 r.Close();
             }
