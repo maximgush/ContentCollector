@@ -355,7 +355,16 @@ namespace ContentCollector
                 build.AddContentEntity(typeof(cContentEntityDirectory), @"data\config\ai", this);           
 
                 build.AddContentEntity(typeof(cContentEntitySimple), @"data\i18n\associations.txt", this);
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\i18n\language.txt", this);     
+                build.AddContentEntity(typeof(cContentEntitySimple), @"data\i18n\language.txt", this);
+
+                build.AddContentEntity(typeof(cContentEntitySimple), @"data\tables\anims.xml", this);     
+                build.AddContentEntity(typeof(cContentEntitySimple), @"data\tables\blueprints.xml", this);   
+  
+                build.AddContentEntity(typeof(cContentEntitySimple), @"data\scripts.lua\missions\pro_category_c\common.lua", this);   
+                build.AddContentEntity(typeof(cContentEntitySimple), @"data\scripts.lua\missions\pro_category_c\endcontrol.lua", this);   
+                build.AddContentEntity(typeof(cContentEntitySimple), @"data\scripts.lua\missions\pro_category_c\mocking.lua", this);   
+                build.AddContentEntity(typeof(cContentEntitySimple), @"data\scripts.lua\missions\pro_category_c\statemachine.lua", this);
+                build.AddContentEntity(typeof(cContentEntitySimple), @"data\tables\fines\russia.xls", this);                   
                 
                 string rulesLocales = GetStringValue("Patches_AdditionalContent", "");
                 if (rulesLocales != "")
@@ -369,6 +378,15 @@ namespace ContentCollector
                 build.AddContentEntity(typeof(cContentEntityPassengers), @"data\config\passengers.ini", this);
 
                 build.AddContentEntity(typeof(cContentEntityTrafficCarsXml), @"data\config\traffic_cars.xml", this);
+
+                // HACK: Не знаю зачем здесь это, но старый скрипт на питоне забирал эти файлы
+                string path = build.GetManglePath("data\\physics\\objects");
+                foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories))
+                {
+                    string name = build.GetRelativePath(file);
+                    if  (Path.GetExtension(file) == ".ini")
+                        build.AddContentEntity(typeof(cContentEntityPhysicsIni), name, this);
+                }                
             }
             #endregion
         }
