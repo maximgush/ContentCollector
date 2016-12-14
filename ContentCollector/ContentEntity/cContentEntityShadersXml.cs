@@ -22,7 +22,7 @@ namespace ContentCollector
             foreach (XmlNode node in xmlDoc.GetElementsByTagName("param"))
             {
                 if (node.Attributes["type"].Value == "Texture")
-                    build.AddContentEntity(new cContentEntityTextureTga("(logic)" + node.Attributes["def"].Value, this));                
+                    build.AddContentEntity(new cContentEntityTextureTga(node.Attributes["def"].Value, this));                
             }
             #endregion
         }

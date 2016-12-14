@@ -16,7 +16,7 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
-            string texturesName = Name.Replace("(logic)","").Replace(@"\textures\", @"\texturesdds\");
+            string texturesName = Name.Replace(@"\textures\", @"\texturesdds\");
             if (!texturesName.EndsWith(".dds"))
             {
                 texturesName = texturesName + ".dds";
