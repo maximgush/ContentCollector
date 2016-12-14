@@ -60,7 +60,7 @@ namespace ContentCollector
             GetPrivateProfileString("Transmission", "AutoTransmissionName", "", stringBuilder, 255, fileName);
             val = stringBuilder.ToString();
             if (val.Length > 0)
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\physics\" + val, this);
+                build.AddContentEntity(typeof(cContentEntityDirectory), @"data\physics\" + val, this);
 
             // [Transmission]
             // IntarderFileName=""
