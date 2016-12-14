@@ -10,6 +10,7 @@ namespace ContentCollector
 {
     public class cContentEntityTrafficCar : cContentEntitySimple
     {
+        override public string FileName { get { return null; } }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
@@ -19,7 +20,7 @@ namespace ContentCollector
             // CarProperty
             build.AddContentEntity(typeof(cContentEntityCarProperty), @"data\gamedata\cars\" + carName + @"\CarProperty.ini", this);
 
-            // p_player_setup.ini
+            // p_traffic_setup.ini
             build.AddContentEntity(typeof(cContentEntityCarPhysicsProperty), @"data/physics/cars/" + carName + @"\p_traffic_setup.ini", this);
 
             // n2
