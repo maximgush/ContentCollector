@@ -14,6 +14,9 @@ namespace ContentCollector
     {
         private string m_name = "";
 
+        // Флаг обозначающий, что данный элемент контента представляет вариацию для конкретного языка, времени года, праздника и тд
+        private bool mIsEntityVariant = false;
+
         private ISet<cContentEntitySimple> m_childContentEntities = new HashSet<cContentEntitySimple>();
         private ISet<cContentEntitySimple> m_parentContentEntities = new HashSet<cContentEntitySimple>();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,6 +102,9 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public virtual void AddEntityVariants(cBuild build)
         {
+            if (mIsEntityVariant)
+                return;
+
             string fileName = Path.GetFileName(Name);
             string directory = Path.GetDirectoryName(build.GetRelativePath(Name)) + "\\";
 
@@ -124,7 +130,11 @@ namespace ContentCollector
                         string path = directory + prefix + fileName + suffixLocale + suffixCelebration + extension;
 
                         if (build.ExistFileInProject(path))
-                            build.AddContentEntity(this.GetType(), path, this);
+                        {
+                            cContentEntitySimple entity = (cContentEntitySimple)Activator.CreateInstance(this.GetType(), path, this);
+                            entity.mIsEntityVariant = true;
+                            build.AddContentEntity(entity);
+                        }
                         else if (build.LocaleAssociations.ContainsKey(locale))
                         {
                             foreach (var localeAssociation in build.LocaleAssociations[locale])
@@ -132,7 +142,11 @@ namespace ContentCollector
                                 suffixLocale = localeAssociation != "" ? '_' + localeAssociation : "";
                                 path = directory + prefix + fileName + suffixLocale + suffixCelebration + extension;
                                 if (build.ExistFileInProject(path))
-                                    build.AddContentEntity(this.GetType(), path, this);
+                                {
+                                    cContentEntitySimple entity = (cContentEntitySimple)Activator.CreateInstance(this.GetType(), path, this);
+                                    entity.mIsEntityVariant = true;
+                                    build.AddContentEntity(entity);
+                                }
                             }
                         }
                     }
