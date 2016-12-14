@@ -22,8 +22,8 @@ namespace ContentCollector
 
             // Запускаем конвертер физики
             Utils.RunProcess(build.GetManglePath(@"bin\win32\buildStaticPLevels.exe"), build.GetManglePath(Name));
-            build.AddContentEntity(typeof(cContentEntitySimple), @"data\physics\levels\" + locationPstaticFileName + ".mopp", this);
-            build.AddContentEntity(typeof(cContentEntitySimple), @"data\physics\levels\" + locationPstaticFileName + ".sg", this);      
+            build.AddContentEntity(new cContentEntitySimple(@"data\physics\levels\" + locationPstaticFileName + ".mopp", this));
+            build.AddContentEntity(new cContentEntitySimple(@"data\physics\levels\" + locationPstaticFileName + ".sg", this));      
         }
     }   // cContentEntityLocationPstatic
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

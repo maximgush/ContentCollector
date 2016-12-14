@@ -11,6 +11,8 @@ namespace ContentCollector
     public class cContentEntityTuningXml : cContentEntitySimple
     {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public cContentEntityTuningXml(string name, cContentEntitySimple parent) : base(name, parent) { }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
             XmlDocument xmlDoc = new XmlDocument();
@@ -19,7 +21,7 @@ namespace ContentCollector
             foreach (XmlNode node in xmlDoc.GetElementsByTagName("Texture"))
             {
                 string path = @"export\textures\" + node.Attributes["path"].Value;
-                build.AddContentEntity(typeof(cContentEntityTextureTga), "(logic)" + path, this);
+                build.AddContentEntity(new cContentEntityTextureTga("(logic)" + path, this));
             }
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

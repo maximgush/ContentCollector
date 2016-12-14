@@ -13,6 +13,9 @@ namespace ContentCollector
 {
     public class cContentEntityParkingCar : cContentEntitySimple
     {        
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public cContentEntityParkingCar(string name, cContentEntitySimple parent) : base(name, parent) { }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string mCarName;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public cContentEntityParkingCar(string name, cContentEntitySimple parent, string carName)
@@ -26,14 +29,14 @@ namespace ContentCollector
         public override void Parse(cBuild build)
         {
             //p_parking_setup.ini
-            //build.AddContentEntity(typeof(cContentEntitySimple), @"data/physics/cars/" + carName + @"\p_parking_setup.ini", this);
+            //build.AddContentEntity(new cContentEntitySimple(@"data/physics/cars/" + carName + @"\p_parking_setup.ini", this));
 
             // n2
             string path = build.GetManglePath("export\\gfxlib\\cars\\" + mCarName);
             foreach (string file in Directory.EnumerateFiles(path, "*.n2", SearchOption.AllDirectories))
             {
                 string name = build.GetRelativePath(file);
-                build.AddContentEntity(typeof(cContentEntityN2), name, this);
+                build.AddContentEntity(new cContentEntityN2(name, this));
             }
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

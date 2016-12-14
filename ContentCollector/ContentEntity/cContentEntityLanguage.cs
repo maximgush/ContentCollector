@@ -10,6 +10,9 @@ namespace ContentCollector
 {
     public class cContentEntityLanguage : cContentEntitySimple
     {
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public cContentEntityLanguage(string name, cContentEntitySimple parent) : base(name, parent) { }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         override public string FileName { get { return null; } }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
@@ -18,14 +21,14 @@ namespace ContentCollector
             foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories))
             {
                 string name = build.GetRelativePath(file);
-                build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                build.AddContentEntity(new cContentEntitySimple(name, this));
             }
 
             path = build.GetManglePath("data\\i18n\\" + Name.Replace('-', '_') + "\\");
             foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories))
             {
                 string name = build.GetRelativePath(file);
-                build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                build.AddContentEntity(new cContentEntitySimple(name, this));
             }
 
             path = build.GetManglePath("data\\audio\\" + Name.Replace('-', '_') + "\\");
@@ -34,7 +37,7 @@ namespace ContentCollector
                 foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories))
                 {
                     string name = build.GetRelativePath(file);
-                    build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                    build.AddContentEntity(new cContentEntitySimple(name, this));
                 }                
             }
         }

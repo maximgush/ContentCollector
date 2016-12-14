@@ -11,6 +11,8 @@ namespace ContentCollector
     public class cContentEntityTrafficCarsXml : cContentEntitySimple
     {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public cContentEntityTrafficCarsXml(string name, cContentEntitySimple parent) : base(name, parent) { }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
 //          AUTOMATION
@@ -28,7 +30,7 @@ namespace ContentCollector
             {
                 string carName = node.Attributes["name"].Value;
                 if (node.Attributes != null && carName != null)
-                    build.AddContentEntity(typeof(cContentEntityTrafficCar), @"TrafficCar\cars\" + carName, this);
+                    build.AddContentEntity(new cContentEntityTrafficCar(@"TrafficCar\cars\" + carName, this));
             }
             #endregion
 
@@ -37,7 +39,7 @@ namespace ContentCollector
             {
                 string carName = node.Attributes["name"].Value;
                 if (node.Attributes != null && carName != null)
-                    build.AddContentEntity(typeof(cContentEntityTrafficCar), @"TrafficCar\cars\" + carName, this);
+                    build.AddContentEntity(new cContentEntityTrafficCar(@"TrafficCar\cars\" + carName, this));
             }
             #endregion
 
@@ -46,7 +48,7 @@ namespace ContentCollector
             {
                 string pedName = node.Attributes["name"].Value;
                 if (node.Attributes != null && pedName != null)
-                    build.AddContentEntity(typeof(cContentEntityPedestrian), @"pedestrians\" + pedName, this);
+                    build.AddContentEntity(new cContentEntityPedestrian(@"pedestrians\" + pedName, this));
             }
             #endregion
         }

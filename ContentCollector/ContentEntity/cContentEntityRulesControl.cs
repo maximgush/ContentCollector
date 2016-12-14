@@ -12,6 +12,8 @@ namespace ContentCollector
     public class cContentEntityRulesControl : cContentEntitySimple
     {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public cContentEntityRulesControl(string name, cContentEntitySimple parent) : base(name, parent) { }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
             StreamReader reader = new StreamReader(new FileStream(build.GetManglePath(FileName), FileMode.Open));
@@ -38,7 +40,7 @@ namespace ContentCollector
 
             while (match.Success)
             {
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\scripts.lua\plugins\" + match.Groups[1].Value + ".lua", this);
+                build.AddContentEntity(new cContentEntitySimple(@"data\scripts.lua\plugins\" + match.Groups[1].Value + ".lua", this));
                 match = match.NextMatch();
             }
         }

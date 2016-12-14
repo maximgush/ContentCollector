@@ -12,6 +12,8 @@ namespace ContentCollector
     public class cContentEntityMission : cContentEntitySimple
     {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public cContentEntityMission(string name, cContentEntitySimple parent) : base(name, parent) { }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
             XmlDocument xmlDoc = new XmlDocument();
@@ -21,7 +23,7 @@ namespace ContentCollector
             foreach (XmlNode node in xmlDoc.GetElementsByTagName("LuaScript"))
             {
                 if (node.Attributes != null && node.Attributes["File"] != null)
-                    build.AddContentEntity(typeof(cContentEntitySimple), node.Attributes["File"].Value, this);
+                    build.AddContentEntity(new cContentEntitySimple(node.Attributes["File"].Value, this));
             }
             #endregion    
 
@@ -29,7 +31,7 @@ namespace ContentCollector
             foreach (XmlNode node in xmlDoc.GetElementsByTagName("ActiveZones"))
             {
                 if (node.Attributes != null && node.Attributes["File"] != null)
-                    build.AddContentEntity(typeof(cContentEntitySimple), node.Attributes["File"].Value, this);
+                    build.AddContentEntity(new cContentEntitySimple(node.Attributes["File"].Value, this));
             }
             #endregion
 
@@ -37,7 +39,7 @@ namespace ContentCollector
             foreach (XmlNode node in xmlDoc.GetElementsByTagName("MissionObjects"))
             {
                 if (node.Attributes != null && node.Attributes["File"] != null)
-                    build.AddContentEntity(typeof(cContentEntitySimple), node.Attributes["File"].Value, this);
+                    build.AddContentEntity(new cContentEntitySimple(node.Attributes["File"].Value, this));
             }
             #endregion
 
@@ -45,7 +47,7 @@ namespace ContentCollector
             foreach (XmlNode node in xmlDoc.GetElementsByTagName("Tip"))
             {
                 if (node.Attributes != null && node.Attributes["File"] != null)
-                    build.AddContentEntity(typeof(cContentEntitySimple), node.Attributes["File"].Value, this);
+                    build.AddContentEntity(new cContentEntitySimple(node.Attributes["File"].Value, this));
             }
             #endregion
 
@@ -57,7 +59,7 @@ namespace ContentCollector
                     string[] scripts = node.Attributes["RulesControlScript"].Value.Split(';');
                     foreach (string script in scripts)
                     {
-                        build.AddContentEntity(typeof(cContentEntityRulesControl), script, this);
+                        build.AddContentEntity(new cContentEntityRulesControl(script, this));
                     }
                     
                 }
@@ -71,7 +73,7 @@ namespace ContentCollector
                 {
                     string videoFile = node.Attributes["File"].Value;
                     videoFile = videoFile.Replace(".avi", ".caf");
-                    build.AddContentEntity(typeof(cContentEntitySimple), videoFile, this);
+                    build.AddContentEntity(new cContentEntitySimple(videoFile, this));
                 }
             }
             #endregion
@@ -99,7 +101,7 @@ namespace ContentCollector
                     string devices = node.Attributes["device"].Value;
                     string[] deviceArrayStrings = devices.Split(',');
                     foreach (string device in deviceArrayStrings)
-                        build.AddContentEntity(typeof(cContentEntityDevice), device, this);
+                        build.AddContentEntity(new cContentEntityDevice(device, this));
                 }                    
             }
             #endregion 
@@ -108,7 +110,7 @@ namespace ContentCollector
             foreach (XmlNode node in xmlDoc.GetElementsByTagName("Mission"))
             {
                 if (node.Attributes != null && node.Attributes["TrafficCarsXml"] != null)
-                    build.AddContentEntity(typeof(cContentEntityTrafficCarsXml), node.Attributes["TrafficCarsXml"].Value, this);
+                    build.AddContentEntity(new cContentEntityTrafficCarsXml(node.Attributes["TrafficCarsXml"].Value, this));
             }
             #endregion
         }

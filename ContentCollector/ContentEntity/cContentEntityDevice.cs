@@ -9,18 +9,21 @@ namespace ContentCollector
 {
     public class cContentEntityDevice : cContentEntitySimple
     {
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public cContentEntityDevice(string name, cContentEntitySimple parent) : base(name, parent) { }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         override public string FileName { get { return null; } }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
             // device.ini
-            build.AddContentEntity(typeof(cContentEntitySimple), @"data/physics/devices/Device" + Name + @"/device.ini", this);
+            build.AddContentEntity(new cContentEntitySimple(@"data/physics/devices/Device" + Name + @"/device.ini", this));
 
             // device_p.hkx
-            build.AddContentEntity(typeof(cContentEntitySimple), @"export/meshes/devices/Device" + Name + @"/device_p.hkx", this);
+            build.AddContentEntity(new cContentEntitySimple(@"export/meshes/devices/Device" + Name + @"/device_p.hkx", this));
 
             // device.n2
-            build.AddContentEntity(typeof(cContentEntityHardCodeN2Files), @"export/meshes/devices/Device" + Name + @"/device.n2", this);
+            build.AddContentEntity(new cContentEntityHardCodeN2Files(@"export/meshes/devices/Device" + Name + @"/device.n2", this));
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }   // cContentEntityDevice

@@ -10,6 +10,9 @@ namespace ContentCollector
 {
     public class cContentEntityHardCodeFiles : cContentEntitySimple
     {
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public cContentEntityHardCodeFiles(string name, cContentEntitySimple parent) : base(name, parent) { }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         override public string FileName { get { return null; } }
         virtual public string IntermediateDir { get { return ""; } }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,11 +24,11 @@ namespace ContentCollector
                 string file = IntermediateDir + reader.ReadLine();
                 Utils.GetNormalPath(ref file);
                 if (Path.GetExtension(file) == ".tga" || Path.GetExtension(file) == ".dds")
-                    build.AddContentEntity(typeof(cContentEntityTextureTga), "(logic)" + file, this);
+                    build.AddContentEntity(new cContentEntityTextureTga("(logic)" + file, this));
                 else if  (Path.GetExtension(file) == ".ini" && file.Contains(@"\physics\"))
-                    build.AddContentEntity(typeof(cContentEntityPhysicsIni), file, this);
+                    build.AddContentEntity(new cContentEntityPhysicsIni(file, this));
                 else
-                    build.AddContentEntity(typeof(cContentEntitySimple), file, this);
+                    build.AddContentEntity(new cContentEntitySimple(file, this));
             }
             reader.Close();              
         }

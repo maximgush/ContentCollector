@@ -20,8 +20,8 @@ namespace ContentCollector
         {
             // Запускаем конвертер физики
             Utils.RunProcess(build.GetManglePath(@"bin\win32\db3converter.exe"), build.GetManglePath(Name));
-            build.AddContentEntity(typeof(cContentEntitySimple), @"data\world\" + Name + ".p", this);
-            build.AddContentEntity(typeof(cContentEntitySimple), @"data\world\" + Name + ".g", this);
+            build.AddContentEntity(new cContentEntitySimple(@"data\world\" + Name + ".p", this));
+            build.AddContentEntity(new cContentEntitySimple(@"data\world\" + Name + ".g", this));
 
             // 
             SQLiteConnection conn = new SQLiteConnection("Data Source=" + build.GetManglePath(Name));
@@ -44,7 +44,7 @@ namespace ContentCollector
                 while (r.Read())
                 {
                     string name = @"export\gfxlib\" + r["Graphics"].ToString() + ".n2";
-                    build.AddContentEntity(typeof(cContentEntityN2), name, this);
+                    build.AddContentEntity(new cContentEntityN2), name, this));
                 }
                 r.Close();
             }
@@ -63,7 +63,7 @@ namespace ContentCollector
                     if (physics != "" && physics != "static")
                     {
                         string name = @"data\physics\" + physics;
-                        build.AddContentEntity(typeof(cContentEntityPhysicsIni), name, this);   
+                        build.AddContentEntity(new cContentEntityPhysicsIni), name, this));   
                     }
                 }
                 r.Close();

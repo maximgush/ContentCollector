@@ -13,6 +13,8 @@ namespace ContentCollector
         [DllImport("kernel32", CharSet = CharSet.Unicode)]
         static extern int GetPrivateProfileString(string Section, string Key, string Default, StringBuilder RetVal, int Size, string FilePath);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public cContentEntityPhysicsIni(string name, cContentEntitySimple parent) : base(name, parent) { }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
         
@@ -26,7 +28,7 @@ namespace ContentCollector
             val = stringBuilder.ToString();
             if (val.Length > 0)
             {
-                build.AddContentEntity(typeof(cContentEntitySimple), val, this);
+                build.AddContentEntity(new cContentEntitySimple(val, this));
             }         
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

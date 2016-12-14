@@ -86,7 +86,7 @@ namespace ContentCollector
                         break;
                     
                     string missionPath = missionSubdirPath + @"\" + mission + ".xml";
-                    build.AddContentEntity(typeof(cContentEntityMission), missionPath, this);
+                    build.AddContentEntity(new cContentEntityMission(missionPath, this));
 
                     index++;
                 }  
@@ -102,11 +102,13 @@ namespace ContentCollector
                     GetPrivateProfileString(BuildType, "Location_db_" + index.ToString(), "", stringBuilder, 255, Name);
                     string locationDb3 = stringBuilder.ToString();
 
-                    if (locationDb3 == "")
-                        break;
-
-                    build.AddContentEntity(typeof(cContentEntityLocation), locationDb3.Replace(".db3",""), this);
-
+                    if (locationDb3 != "")
+                    {
+                        Utils.GetNormalPath(ref locationDb3);
+                        string name = locationDb3.Replace(".db3", "");
+                        string[] words = name.Split(new char[] { '\\', '/' });
+                        build.AddContentEntity(new cContentEntityLocation(name, this, words[0], words[1]));
+                    }
                     index++;
                 }  
             }
@@ -129,9 +131,9 @@ namespace ContentCollector
                     string icon = @"data\gui\" + guiFolderName + @"\imagesets\locations\" + locationGuiImage + "_icon.png";
                     string detail = @"data\gui\" + guiFolderName + @"\imagesets\locations\" + locationGuiImage + "_detail.png";
                     string mini = @"data\gui\" + guiFolderName + @"\imagesets\locations\" + locationGuiImage + "_mini.png";
-                    build.AddContentEntity(typeof(cContentEntitySimple), icon, this);
-                    build.AddContentEntity(typeof(cContentEntitySimple), detail, this);
-                    build.AddContentEntity(typeof(cContentEntitySimple), mini, this);
+                    build.AddContentEntity(new cContentEntitySimple(icon, this));
+                    build.AddContentEntity(new cContentEntitySimple(detail, this));
+                    build.AddContentEntity(new cContentEntitySimple(mini, this));
 
                     index++;
                 }   
@@ -147,7 +149,7 @@ namespace ContentCollector
 
                 foreach (var language in languageArray)
                 {
-                    build.AddContentEntity(typeof(cContentEntityLanguage), language, this);
+                    build.AddContentEntity(new cContentEntityLanguage(language, this));
                     build.Locales.Add(language.Replace('-','_'));
                 }
             }
@@ -162,14 +164,14 @@ namespace ContentCollector
                 foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly))
                 {
                     string name = build.GetRelativePath(file);
-                    build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                    build.AddContentEntity(new cContentEntitySimple(name, this));
                 }
 
                 path = build.GetManglePath(@"data\gui\" + guiFolderName + @"\imagesets\indicators");
                 foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly))
                 {
                     string name = build.GetRelativePath(file);
-                    build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                    build.AddContentEntity(new cContentEntitySimple(name, this));
                 }
 
                 foreach (var carNumber in carNumbers)
@@ -178,7 +180,7 @@ namespace ContentCollector
                     foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly))
                     {
                         string name = build.GetRelativePath(file);
-                        build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                        build.AddContentEntity(new cContentEntitySimple(name, this));
                     }
                 }
 
@@ -186,42 +188,42 @@ namespace ContentCollector
                 foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly))
                 {
                     string name = build.GetRelativePath(file);
-                    build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                    build.AddContentEntity(new cContentEntitySimple(name, this));
                 }
 
                 path = build.GetManglePath(@"data\gui\" + guiFolderName + @"\looknfeel\");
                 foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly))
                 {
                     string name = build.GetRelativePath(file);
-                    build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                    build.AddContentEntity(new cContentEntitySimple(name, this));
                 }
 
                 path = build.GetManglePath(@"data\gui\" + guiFolderName + @"\layouts\");
                 foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly))
                 {
                     string name = build.GetRelativePath(file);
-                    build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                    build.AddContentEntity(new cContentEntitySimple(name, this));
                 }
 
                 path = build.GetManglePath(@"data\gui\" + guiFolderName + @"\schemes\");
                 foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly))
                 {
                     string name = build.GetRelativePath(file);
-                    build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                    build.AddContentEntity(new cContentEntitySimple(name, this));
                 }
 
                 path = build.GetManglePath(@"data\gui\" + guiFolderName + @"\configs\");
                 foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly))
                 {
                     string name = build.GetRelativePath(file);
-                    build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                    build.AddContentEntity(new cContentEntitySimple(name, this));
                 }
 
                 path = build.GetManglePath(@"data\gui\Common");
                 foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories))
                 {
                     string name = build.GetRelativePath(file);
-                    build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                    build.AddContentEntity(new cContentEntitySimple(name, this));
                 }  
             }
             #endregion
@@ -230,91 +232,91 @@ namespace ContentCollector
             {
                 string directory = Path.GetDirectoryName(Name) + "\\";
 
-                build.AddContentEntity(typeof(cContentEntityHardCodeFiles), directory + @"hard_code.txt",this);
-                build.AddContentEntity(typeof(cContentEntityHardCodeN2Files), directory + @"hard_n2.txt",this);
-                build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files.txt", this);
-                build.AddContentEntity(typeof(cContentEntityHardCodeFilesDataConfig), directory + @"data_config_files.txt", this);
+                build.AddContentEntity(new cContentEntityHardCodeFiles(directory + @"hard_code.txt", this));
+                build.AddContentEntity(new cContentEntityHardCodeN2Files(directory + @"hard_n2.txt", this));
+                build.AddContentEntity(new cContentEntityHardCodeFilesBinWin32(directory + @"win32_files.txt", this));
+                build.AddContentEntity(new cContentEntityHardCodeFilesDataConfig(directory + @"data_config_files.txt", this));
 
 
                 if (BuildType == "Home")
                 {
-                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_Home.txt", this);
-                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesDataConfig), directory + @"data_config_files_Home.txt", this);
+                    build.AddContentEntity(new cContentEntityHardCodeFilesBinWin32(directory + @"win32_files_Home.txt", this));
+                    build.AddContentEntity(new cContentEntityHardCodeFilesDataConfig(directory + @"data_config_files_Home.txt", this));
 
                 }
 
                 if (BuildType == "HomeRu")
                 {
-                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_HomeRu.txt", this);
-                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesDataConfig), directory + @"data_config_files_Home.txt", this);
+                    build.AddContentEntity(new cContentEntityHardCodeFilesBinWin32(directory + @"win32_files_HomeRu.txt", this));
+                    build.AddContentEntity(new cContentEntityHardCodeFilesDataConfig(directory + @"data_config_files_Home.txt", this));
 
                 }
 
                 if (BuildType == "CCD_Steam")
                 {
-                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_CCD_Steam.txt", this);
-                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesDataConfig), directory + @"data_config_files_CCD_Steam.txt", this);
+                    build.AddContentEntity(new cContentEntityHardCodeFilesBinWin32(directory + @"win32_files_CCD_Steam.txt", this));
+                    build.AddContentEntity(new cContentEntityHardCodeFilesDataConfig(directory + @"data_config_files_CCD_Steam.txt", this));
                 }
 
                 if (BuildType == "MGI")
                 {
-                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_MGI.txt", this);
-                    build.AddContentEntity(typeof(cContentEntityHardCodeFiles), directory + @"hard_code_MGI.txt",this);
+                    build.AddContentEntity(new cContentEntityHardCodeFilesBinWin32(directory + @"win32_files_MGI.txt", this));
+                    build.AddContentEntity(new cContentEntityHardCodeFiles(directory + @"hard_code_MGI.txt", this));
                 }
 
                 if (BuildType == "Autobahn")
                 {
-                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_Autobahn.txt", this);
-                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesDataConfig), directory + @"data_config_files_Autobahn.txt", this);
+                    build.AddContentEntity(new cContentEntityHardCodeFilesBinWin32(directory + @"win32_files_Autobahn.txt", this));
+                    build.AddContentEntity(new cContentEntityHardCodeFilesDataConfig(directory + @"data_config_files_Autobahn.txt", this));
                 }
 
                 if (GetBoolValue("Simulator"))
                 {
-                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_Simulator.txt", this);
+                    build.AddContentEntity(new cContentEntityHardCodeFilesBinWin32(directory + @"win32_files_Simulator.txt", this));
                 }
                 if (GetBoolValue("Net"))
                 {
-                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_Net.txt", this);
+                    build.AddContentEntity(new cContentEntityHardCodeFilesBinWin32(directory + @"win32_files_Net.txt", this));
                 }
 
                 if (GetStringValue("Psychophysics","") == "full")
                 {
-                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_Psychophysics.txt", this);
+                    build.AddContentEntity(new cContentEntityHardCodeFilesBinWin32(directory + @"win32_files_Psychophysics.txt", this));
                 }
                 else if (GetStringValue("Psychophysics", "") == "lite")
                 {
-                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_Psychophysics_lite.txt", this);
+                    build.AddContentEntity(new cContentEntityHardCodeFilesBinWin32(directory + @"win32_files_Psychophysics_lite.txt", this));
                 }
 
                 if (GetBoolValue("VlcCamera",false))
                 {
-                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_vlc.txt", this);
+                    build.AddContentEntity(new cContentEntityHardCodeFilesBinWin32(directory + @"win32_files_vlc.txt", this));
                 }
 
                 if (GetBoolValue("ffmpegCamera",false))
                 {
-                    build.AddContentEntity(typeof(cContentEntityHardCodeFilesBinWin32), directory + @"win32_files_ffmpeg.txt", this);
+                    build.AddContentEntity(new cContentEntityHardCodeFilesBinWin32(directory + @"win32_files_ffmpeg.txt", this));
                     
                 }
 
                 if (BuildType == "Home" || BuildType == "HomeRu" || BuildType == "CCD_Kids" || BuildType == "CCD_Steam")
                 {
-                    build.AddContentEntity(typeof(cContentEntityHardCodeFiles), directory + @"hard_code_Home.txt", this);
+                    build.AddContentEntity(new cContentEntityHardCodeFiles(directory + @"hard_code_Home.txt", this));
                 }
 
                 if (BuildType != "Home" && BuildType != "HomeRu" && BuildType != "KSI" && BuildType != "Autobahn" && BuildType != "CCD_Steam")
                 {
-                    build.AddContentEntity(typeof(cContentEntityHardCodeFiles), directory + @"hard_code_Pro.txt", this);
+                    build.AddContentEntity(new cContentEntityHardCodeFiles(directory + @"hard_code_Pro.txt", this));
                 }
 
                 if (BuildType == "Autocrane_Net" || BuildType == "Autocrane")
                 {
-                    build.AddContentEntity(typeof(cContentEntityHardCodeFiles), directory + @"hard_code_Autocrane.txt", this);
+                    build.AddContentEntity(new cContentEntityHardCodeFiles(directory + @"hard_code_Autocrane.txt", this));
                 }
 
                 if (BuildType.ToLower().IndexOf("crane") >= 0)
                 {
-                    build.AddContentEntity(typeof(cContentEntityDirectory), directory + @"data_gamedata_defender.txt", this);
+                    build.AddContentEntity(new cContentEntityDirectory(directory + @"data_gamedata_defender.txt", this));
                 }                                                                                 
 
                 //"data_scripts.lua_files.txt"
@@ -327,14 +329,14 @@ namespace ContentCollector
                 string directXStr = GetStringValue("DirectX", "[11]");
                 foreach (var directX_version in directXStr.TrimStart('[').TrimEnd(']').Split(','))
                 {
-                    build.AddContentEntity(typeof(cContentEntitySimple), @"bin\win32\d3d" + directX_version + "renderer.dll", this);
-                    build.AddContentEntity(typeof(cContentEntitySimple), @"bin\win32\CEGUIDirect3D" + directX_version + "Renderer.dll", this);
-                    build.AddContentEntity(typeof(cContentEntityDirectory), @"data\shaders\dx" + directX_version, this);
+                    build.AddContentEntity(new cContentEntitySimple(@"bin\win32\d3d" + directX_version + "renderer.dll", this));
+                    build.AddContentEntity(new cContentEntitySimple(@"bin\win32\CEGUIDirect3D" + directX_version + "Renderer.dll", this));
+                    build.AddContentEntity(new cContentEntityDirectory(@"data\shaders\dx" + directX_version, this));
                 }
 
                 #region  shaders
                 {
-                    build.AddContentEntity(typeof(cContentEntityShadersXml), @"data\shaders\shaders.xml", this);                   
+                    build.AddContentEntity(new cContentEntityShadersXml(@"data\shaders\shaders.xml", this));                   
                 }
                 #endregion
             }
@@ -342,42 +344,42 @@ namespace ContentCollector
 
             #region OtherEntities
             {
-                build.AddContentEntity(typeof(cContentEntitySimple),@"bin\win32\gui_" + GetStringValue(GUI_Folder_Name,"pro") + ".dll", this);
+                build.AddContentEntity(new cContentEntitySimple(@"bin\win32\gui_" + GetStringValue(GUI_Folder_Name,"pro") + ".dll", this));
 
                 string DefaultKeybindOverride = GetStringValue("DefaultKeybindOverride", @"n/a");
                 if (DefaultKeybindOverride != @"n/a")
-                    build.AddContentEntity(typeof(cContentEntitySimple), build.GetManglePath(@"data\config\" + DefaultKeybindOverride), this);
+                    build.AddContentEntity(new cContentEntitySimple(build.GetManglePath(@"data\config\" + DefaultKeybindOverride), this));
 
-                build.AddContentEntity(typeof(cContentEntityDirectory), @"data\scripts", this);
-                build.AddContentEntity(typeof(cContentEntityDirectory), @"data\profiles", this);
+                build.AddContentEntity(new cContentEntityDirectory(@"data\scripts", this));
+                build.AddContentEntity(new cContentEntityDirectory(@"data\profiles", this));
 
-                build.AddContentEntity(typeof(cContentEntityDirectory), @"data\config\licenseplates", this);
-                build.AddContentEntity(typeof(cContentEntityDirectory), @"data\config\ai", this);           
+                build.AddContentEntity(new cContentEntityDirectory(@"data\config\licenseplates", this));
+                build.AddContentEntity(new cContentEntityDirectory(@"data\config\ai", this));           
 
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\i18n\associations.txt", this);
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\i18n\language.txt", this);
+                build.AddContentEntity(new cContentEntitySimple(@"data\i18n\associations.txt", this));
+                build.AddContentEntity(new cContentEntitySimple(@"data\i18n\language.txt", this));
 
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\tables\anims.xml", this);     
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\tables\blueprints.xml", this);   
+                build.AddContentEntity(new cContentEntitySimple(@"data\tables\anims.xml", this));     
+                build.AddContentEntity(new cContentEntitySimple(@"data\tables\blueprints.xml", this));   
   
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\scripts.lua\missions\pro_category_c\common.lua", this);   
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\scripts.lua\missions\pro_category_c\endcontrol.lua", this);   
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\scripts.lua\missions\pro_category_c\mocking.lua", this);   
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\scripts.lua\missions\pro_category_c\statemachine.lua", this);
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\tables\fines\russia.xls", this);                   
+                build.AddContentEntity(new cContentEntitySimple(@"data\scripts.lua\missions\pro_category_c\common.lua", this));   
+                build.AddContentEntity(new cContentEntitySimple(@"data\scripts.lua\missions\pro_category_c\endcontrol.lua", this));   
+                build.AddContentEntity(new cContentEntitySimple(@"data\scripts.lua\missions\pro_category_c\mocking.lua", this));   
+                build.AddContentEntity(new cContentEntitySimple(@"data\scripts.lua\missions\pro_category_c\statemachine.lua", this));
+                build.AddContentEntity(new cContentEntitySimple(@"data\tables\fines\russia.xls", this));                   
                 
                 string rulesLocales = GetStringValue("Patches_AdditionalContent", "");
                 if (rulesLocales != "")
                 {
                     foreach (var rules in rulesLocales.Split(';'))
-                        build.AddContentEntity(typeof(cContentEntitySimple), @"data\config\rules\" + rules + ".ini", this);
+                        build.AddContentEntity(new cContentEntitySimple(@"data\config\rules\" + rules + ".ini", this));
                 }
                 else
-                    build.AddContentEntity(typeof(cContentEntitySimple), @"data\config\rules\ru_RU.ini", this);
+                    build.AddContentEntity(new cContentEntitySimple(@"data\config\rules\ru_RU.ini", this));
 
-                build.AddContentEntity(typeof(cContentEntityPassengers), @"data\config\passengers.ini", this);
+                build.AddContentEntity(new cContentEntityPassengers(@"data\config\passengers.ini", this));
 
-                build.AddContentEntity(typeof(cContentEntityTrafficCarsXml), @"data\config\traffic_cars.xml", this);
+                build.AddContentEntity(new cContentEntityTrafficCarsXml(@"data\config\traffic_cars.xml", this));
 
                 // HACK: Не знаю зачем здесь это, но старый скрипт на питоне забирал эти файлы
                 string path = build.GetManglePath("data\\physics\\objects");
@@ -385,7 +387,7 @@ namespace ContentCollector
                 {
                     string name = build.GetRelativePath(file);
                     if  (Path.GetExtension(file) == ".ini")
-                        build.AddContentEntity(typeof(cContentEntityPhysicsIni), name, this);
+                        build.AddContentEntity(new cContentEntityPhysicsIni(name, this));
                 }                
             }
             #endregion

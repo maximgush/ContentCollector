@@ -9,6 +9,9 @@ namespace ContentCollector
 {
     public class cContentEntityTextureTga: cContentEntitySimple
     {
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public cContentEntityTextureTga(string name, cContentEntitySimple parent) : base(name, parent) { }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         override public string FileName { get { return null; } }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
@@ -18,7 +21,7 @@ namespace ContentCollector
             {
                 texturesName = texturesName + ".dds";
             }
-            build.AddContentEntity(typeof(cContentEntityTextureDds), texturesName, this);
+            build.AddContentEntity(new cContentEntityTextureDds(texturesName, this));
 
             AddEntityVariants(build);
         }

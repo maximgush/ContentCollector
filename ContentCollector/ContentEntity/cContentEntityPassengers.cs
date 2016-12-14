@@ -11,6 +11,9 @@ namespace ContentCollector
 {
     public class cContentEntityPassengers : cContentEntitySimple
     {
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public cContentEntityPassengers(string name, cContentEntitySimple parent) : base(name, parent) { }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         override public string FileName { get { return null; } }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
@@ -31,7 +34,7 @@ namespace ContentCollector
 
                     while (match.Success)
                     {
-                        build.AddContentEntity(typeof(cContentEntityN2), @"export\gfxlib\" + match.Groups[1].Value + ".n2", this);
+                        build.AddContentEntity(new cContentEntityN2(@"export\gfxlib\" + match.Groups[1].Value + ".n2", this));
                         match = match.NextMatch();
                     }
                 }               
@@ -44,7 +47,7 @@ namespace ContentCollector
 
                     while (match.Success)
                     {
-                        build.AddContentEntity(typeof(cContentEntityN2), @"export\gfxlib\" + match.Groups[1].Value + ".n2", this);
+                        build.AddContentEntity(new cContentEntityN2(@"export\gfxlib\" + match.Groups[1].Value + ".n2", this));
                         match = match.NextMatch();
                     }
 

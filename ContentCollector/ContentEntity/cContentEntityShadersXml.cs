@@ -11,6 +11,8 @@ namespace ContentCollector
     public class cContentEntityShadersXml : cContentEntitySimple
     {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public cContentEntityShadersXml(string name, cContentEntitySimple parent) : base(name, parent) { }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
             XmlDocument xmlDoc = new XmlDocument();
@@ -20,7 +22,7 @@ namespace ContentCollector
             foreach (XmlNode node in xmlDoc.GetElementsByTagName("param"))
             {
                 if (node.Attributes["type"].Value == "Texture")
-                    build.AddContentEntity(typeof(cContentEntityTextureTga), "(logic)" + node.Attributes["def"].Value, this);                
+                    build.AddContentEntity(new cContentEntityTextureTga("(logic)" + node.Attributes["def"].Value, this));                
             }
             #endregion
         }

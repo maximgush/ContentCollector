@@ -10,6 +10,9 @@ namespace ContentCollector
 {
     public class cContentEntityHardCodeN2Files : cContentEntitySimple
     {
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public cContentEntityHardCodeN2Files(string name, cContentEntitySimple parent) : base(name, parent) { }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         override public string FileName { get { return null; } }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
@@ -18,7 +21,7 @@ namespace ContentCollector
             while (!reader.EndOfStream)
             {
                 string file = reader.ReadLine();
-                build.AddContentEntity(typeof(cContentEntityN2), file, this);
+                build.AddContentEntity(new cContentEntityN2(file, this));
             }
             reader.Close();              
         }

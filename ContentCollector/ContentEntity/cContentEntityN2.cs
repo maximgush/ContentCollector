@@ -12,6 +12,8 @@ namespace ContentCollector
     public class cContentEntityN2 : cContentEntitySimple
     {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public cContentEntityN2(string name, cContentEntitySimple parent) : base(name, parent) { }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
             string fileName = build.GetManglePath(Name);
@@ -31,7 +33,7 @@ namespace ContentCollector
 
                 while (match.Success)
                 {
-                    build.AddContentEntity(typeof(cContentEntityTextureTga), "(logic)" + match.Groups[1].Value, this);
+                    build.AddContentEntity(new cContentEntityTextureTga("(logic)" + match.Groups[1].Value, this));
                     match = match.NextMatch();
                 }
             }
@@ -46,7 +48,7 @@ namespace ContentCollector
 
                 while (match.Success)
                 {
-                    build.AddContentEntity(typeof(cContentEntitySimple), match.Groups[1].Value, this);
+                    build.AddContentEntity(new cContentEntitySimple(match.Groups[1].Value, this));
                     match = match.NextMatch();
                 }   
             }
@@ -61,7 +63,7 @@ namespace ContentCollector
 
                 while (match.Success)
                 {
-                    build.AddContentEntity(typeof(cContentEntitySimple), match.Groups[1].Value, this);
+                    build.AddContentEntity(new cContentEntitySimple(match.Groups[1].Value, this));
                     match = match.NextMatch();
                 }
             }
@@ -71,7 +73,7 @@ namespace ContentCollector
             {
                 string hkx_fileName = Name.Replace("\\gfxlib\\","\\meshes\\").Replace(".n2", "_c_0.hkx");
                 if (build.ExistFileInProject(hkx_fileName))
-                    build.AddContentEntity(typeof(cContentEntitySimple), hkx_fileName, this);
+                    build.AddContentEntity(new cContentEntitySimple(hkx_fileName, this));
             }
             #endregion
 

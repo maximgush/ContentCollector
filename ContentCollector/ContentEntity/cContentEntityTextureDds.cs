@@ -10,6 +10,8 @@ namespace ContentCollector
     public class cContentEntityTextureDds : cContentEntitySimple
     {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public cContentEntityTextureDds(string name, cContentEntitySimple parent) : base(name, parent) { }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
             Name = Name.Replace("(logic)", "").Replace(@"\textures\", @"\texturesdds\");

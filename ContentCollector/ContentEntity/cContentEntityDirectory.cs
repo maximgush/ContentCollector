@@ -10,6 +10,9 @@ namespace ContentCollector
 {
     public class cContentEntityDirectory : cContentEntitySimple
     {
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public cContentEntityDirectory(string name, cContentEntitySimple parent) : base(name, parent) { }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         override public string FileName { get { return null; } }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
@@ -18,7 +21,7 @@ namespace ContentCollector
             foreach (string file in Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories))
             {
                 string name = build.GetRelativePath(file);
-                build.AddContentEntity(typeof(cContentEntitySimple), name, this);
+                build.AddContentEntity(new cContentEntitySimple(name, this));
             }
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -19,7 +19,7 @@ namespace ContentCollector
         {
             // Мап-конвертер
             Utils.RunProcess(build.GetManglePath(@"bin\win32\MapConverter.exe"), build.GetManglePath(Name));
-            build.AddContentEntity(typeof(cContentEntitySimple), Name.Replace(".map",".bmap"), this);          
+            build.AddContentEntity(new cContentEntitySimple(Name.Replace(".map",".bmap"), this));
         }
     }   // cContentEntityLocationMap
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

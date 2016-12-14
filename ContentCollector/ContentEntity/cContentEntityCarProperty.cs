@@ -11,6 +11,9 @@ namespace ContentCollector
 {
     public class cContentEntityCarProperty : cContentEntitySimple
     {
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public cContentEntityCarProperty(string name, cContentEntitySimple parent) : base(name, parent) { }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         [DllImport("kernel32", CharSet = CharSet.Unicode)]
         static extern int GetPrivateProfileString(string Section, string Key, string Default, StringBuilder RetVal, int Size, string FilePath);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,8 +42,8 @@ namespace ContentCollector
             val = stringBuilder.ToString();
             if (val.Length > 0)
             {
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\audio\" + val + ".xsb", this);
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\audio\" + val + ".xwb", this);
+                build.AddContentEntity(new cContentEntitySimple(@"data\audio\" + val + ".xsb", this));
+                build.AddContentEntity(new cContentEntitySimple(@"data\audio\" + val + ".xwb", this));
             }
             // [Common]
             // SoundBankName = "amaz"
@@ -48,11 +51,11 @@ namespace ContentCollector
             val = stringBuilder.ToString();
             if (val.Length > 0)
             {
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\audio\" + val + ".xsb", this);
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\audio\" + val + ".xwb", this);
+                build.AddContentEntity(new cContentEntitySimple(@"data\audio\" + val + ".xsb", this));
+                build.AddContentEntity(new cContentEntitySimple(@"data\audio\" + val + ".xwb", this));
 
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\audio\traffic_" + val + ".xsb", this);
-                build.AddContentEntity(typeof(cContentEntitySimple), @"data\audio\traffic_" + val + ".xwb", this);   
+                build.AddContentEntity(new cContentEntitySimple(@"data\audio\traffic_" + val + ".xsb", this));
+                build.AddContentEntity(new cContentEntitySimple(@"data\audio\traffic_" + val + ".xwb", this));   
             }
 
             // [Common]
@@ -60,14 +63,14 @@ namespace ContentCollector
             GetPrivateProfileString("Common", "TuningConfigPath", "", stringBuilder, 255, fileName);
             val = stringBuilder.ToString();
             if (val.Length > 0)
-                build.AddContentEntity(typeof(cContentEntityTuningXml),@"data\gamedata\" + val,this);
+                build.AddContentEntity(new cContentEntityTuningXml(@"data\gamedata\" + val, this));
 
             // [Cameras]
             // CameraProfile="cars/Car01/cameras.xml"
             GetPrivateProfileString("Cameras", "CameraProfile", "", stringBuilder, 255, fileName);
             val = stringBuilder.ToString();
             if (val.Length > 0)
-                build.AddContentEntity(typeof(cContentEntitySimple),@"data\gamedata\" + val,this);   
+                build.AddContentEntity(new cContentEntitySimple(@"data\gamedata\" + val, this));   
      
             // [Humans]
             // DriverAnimatedModel = (Driver="cars/Car34/driver", Wheel="cars/Car34/wheel")
@@ -79,13 +82,13 @@ namespace ContentCollector
                 Match match = regex.Match(val);
 
                if (match.Success)
-                    build.AddContentEntity(typeof(cContentEntityN2), @"export\gfxlib\" + match.Groups[1].Value + ".n2", this);
+                    build.AddContentEntity(new cContentEntityN2(@"export\gfxlib\" + match.Groups[1].Value + ".n2", this));
 
                regex = new Regex("Wheel=\"([^\\r\\n\"]+)\"");
                match = regex.Match(val);
 
                if (match.Success)
-                   build.AddContentEntity(typeof(cContentEntityN2), @"export\gfxlib\" + match.Groups[1].Value + ".n2", this);
+                   build.AddContentEntity(new cContentEntityN2(@"export\gfxlib\" + match.Groups[1].Value + ".n2", this));
 
 
             }
