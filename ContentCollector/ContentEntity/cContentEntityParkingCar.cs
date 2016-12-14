@@ -13,18 +13,23 @@ namespace ContentCollector
 {
     public class cContentEntityParkingCar : cContentEntitySimple
     {        
+        public string mCarName;
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public cContentEntityParkingCar(string name, cContentEntitySimple parent, string carName)
+            : base(name, parent)
+        {
+            mCarName = carName;
+        }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         override public string FileName { get { return null; } }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
-            string[] words = Name.Split(new char[] { '\\' });
-            string carName = words[2];
-
-            // p_player_setup.ini
+            //p_parking_setup.ini
             //build.AddContentEntity(typeof(cContentEntitySimple), @"data/physics/cars/" + carName + @"\p_parking_setup.ini", this);
 
             // n2
-            string path = build.GetManglePath("export\\gfxlib\\cars\\" + carName);
+            string path = build.GetManglePath("export\\gfxlib\\cars\\" + mCarName);
             foreach (string file in Directory.EnumerateFiles(path, "*.n2", SearchOption.AllDirectories))
             {
                 string name = build.GetRelativePath(file);

@@ -10,21 +10,26 @@ namespace ContentCollector
 {
     public class cContentEntityTrafficCar : cContentEntitySimple
     {
+        public string mCarName;
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public cContentEntityTrafficCar(string name, cContentEntitySimple parent, string carName)
+            : base(name, parent)
+        {
+            mCarName = carName;
+        }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         override public string FileName { get { return null; } }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
-            string[] words = Name.Split(new char[] { '\\' });
-            string carName = words[2];
-
             // CarProperty
-            build.AddContentEntity(typeof(cContentEntityCarProperty), @"data\gamedata\cars\" + carName + @"\CarProperty.ini", this);
+            build.AddContentEntity(typeof(cContentEntityCarProperty), @"data\gamedata\cars\" + mCarName + @"\CarProperty.ini", this);
 
             // p_traffic_setup.ini
-            build.AddContentEntity(typeof(cContentEntityCarPhysicsProperty), @"data/physics/cars/" + carName + @"\p_traffic_setup.ini", this);
+            build.AddContentEntity(typeof(cContentEntityCarPhysicsProperty), @"data/physics/cars/" + mCarName + @"\p_traffic_setup.ini", this);
 
             // n2
-            string path = build.GetManglePath("export\\gfxlib\\cars\\" + carName);
+            string path = build.GetManglePath("export\\gfxlib\\cars\\" + mCarName);
             foreach (string file in Directory.EnumerateFiles(path, "*.n2", SearchOption.AllDirectories))
             {
                 string name = build.GetRelativePath(file);

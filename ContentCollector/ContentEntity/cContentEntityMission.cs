@@ -87,7 +87,7 @@ namespace ContentCollector
             foreach (XmlNode node in xmlDoc.GetElementsByTagName("Location"))
             {
                 if (node.Attributes != null)
-                    build.AddContentEntity(typeof(cContentEntityLocation), cityName + '\\' + node.InnerText, this);
+                    build.AddContentEntity(new cContentEntityLocation(cityName + '\\' + node.InnerText, this, cityName, node.InnerText));
             }
             #endregion
 

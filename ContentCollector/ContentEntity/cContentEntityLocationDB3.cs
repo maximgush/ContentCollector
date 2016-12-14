@@ -12,6 +12,8 @@ namespace ContentCollector
 {
     public class cContentEntityLocationDB3 : cContentEntitySimple
     {
+        public cContentEntityLocationDB3(string name, cContentEntitySimple parent) : base(name, parent) { }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string FileName { get { return null; } }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
@@ -77,8 +79,8 @@ namespace ContentCollector
                 SQLiteDataReader r = cmd.ExecuteReader();
                 while (r.Read())
                 {
-                    string name = "ParkingCar\\" + r["Physics"].ToString().Replace("/p_parking_setup.ini","");
-                    build.AddContentEntity(typeof(cContentEntityParkingCar), name, this);
+                    string name = r["Physics"].ToString().Replace("/p_parking_setup.ini","").Replace("cars/","");
+                    build.AddContentEntity(new cContentEntityParkingCar(name, this, name);
                 }
                 r.Close();
             }
@@ -89,6 +91,6 @@ namespace ContentCollector
             AddEntityVariants(build);
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    }   // cContentEntityMission
+    }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }   // сContentCollector
