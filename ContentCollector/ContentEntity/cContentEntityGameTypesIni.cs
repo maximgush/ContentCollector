@@ -100,13 +100,13 @@ namespace ContentCollector
                     GetPrivateProfileString(BuildType, "Location_db_" + index.ToString(), "", stringBuilder, 255, Name);
                     string locationDb3 = stringBuilder.ToString();
 
-                    if (locationDb3 != "")
-                    {
-                        Utils.GetNormalPath(ref locationDb3);
-                        string name = locationDb3.Replace(".db3", "");
-                        string[] words = name.Split(new char[] { '\\', '/' });
-                        build.AddContentEntity(new cContentEntityLocation(name, this, words[0], words[1]));
-                    }
+                    if (locationDb3 == "")
+                        break;
+                    
+                    Utils.GetNormalPath(ref locationDb3);
+                    string name = locationDb3.Replace(".db3", "");
+                    string[] words = name.Split(new char[] { '\\', '/' });
+                    build.AddContentEntity(new cContentEntityLocation(name, this, words[0], words[1]));
                     index++;
                 }  
             }
