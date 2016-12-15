@@ -23,7 +23,7 @@ namespace ContentCollector
             {
                 string file = IntermediateDir + reader.ReadLine();
                 Utils.GetNormalPath(ref file);
-                if (Path.GetExtension(file) == ".tga" || Path.GetExtension(file) == ".dds")
+                if (Path.GetExtension(file) == ".tga" || Path.GetExtension(file) == ".dds" || Path.GetExtension(file) == ".png")
                     build.AddContentEntity(new cContentEntityTextureTga(file, this));
                 else if  (Path.GetExtension(file) == ".ini" && file.Contains(@"\physics\"))
                     build.AddContentEntity(new cContentEntityPhysicsIni(file, this));
