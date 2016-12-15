@@ -17,10 +17,6 @@ namespace ContentCollector
     public class cBuild
     {
         private string mProjectPath = "";        
-        private string mRepositoryURL = "";
-        private int mLastBuildRevision = -1;
-        private string mProductInternalName = "";
-
 
         public List<string> Seasons = new List<string>() { "" };
         public List<string> Locales = new List<string>();
@@ -61,10 +57,6 @@ namespace ContentCollector
                 }
             }
         }
-        public string RepositoryURL { get { return mRepositoryURL; } }
-        public int LastBuildRevision { get { return mLastBuildRevision; } }
-        public string ProductInternalName { get { return mProductInternalName; } set { mProductInternalName = value; }}
-
 
         [XmlArrayItem("cContentEntitySimple", Type = typeof(cContentEntitySimple))]
         [XmlArrayItem("cContentEntityGameTypesIni", Type = typeof(cContentEntityGameTypesIni))]
@@ -112,17 +104,15 @@ namespace ContentCollector
             }
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public void AddRootContentEntity(System.Type entityType, string name)
+        public void AddRootContentEntity(cContentEntitySimple entity)
         {
-            if (mRootEntities.FindAll(x => x.Name == name).Count > 0)
+            if (mRootEntities.FindAll(x => x.Name == entity.Name).Count > 0)
             {
-                MessageBox.Show("Root с именем " + name + " уже существует!");
+                MessageBox.Show("Root с именем " + entity.Name + " уже существует!");
                 return;
             }
-            
-            cContentEntitySimple rootEntity = (cContentEntitySimple)Activator.CreateInstance(entityType);
-            rootEntity.Name = name;
-            mRootEntities.Add(rootEntity);
+
+            mRootEntities.Add(entity);
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void AddContentEntity(cContentEntitySimple entity)
@@ -153,44 +143,6 @@ namespace ContentCollector
             {
                 if (lockTaken) spLock.Exit();
             }
-#endif
-        }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public void AddContentEntity(System.Type entityType, string name, cContentEntitySimple parent)
-        {
-            Utils.GetNormalPath(ref name);
-            string dictionaryName = name + "(" + entityType.ToString() + ")";
-
-#if MULTITHREADING
-            bool lockTaken = false;
-            try
-            {
-                spLock.Enter(ref lockTaken);
-#endif
-                if (mContentDictionary.ContainsKey(dictionaryName))
-                {
-                    cContentEntitySimple entity = mContentDictionary[dictionaryName];
-                    if (entity.GetType() != entityType)
-                        MessageBox.Show("Элемент с таким именем уже существует под другим типом!");
-
-                    entity.AddParentContentEntity(parent);
-                }
-                else
-                {
-                    cContentEntitySimple entity = (cContentEntitySimple)Activator.CreateInstance(entityType);
-                    entity.Name = name;
-                    entity.AddParentContentEntity(parent);
-                    parent.AddChildContentEntity(entity);
-
-                    mContentDictionary.Add(dictionaryName, entity);
-                    mQueryContentEntitiesToParse.Enqueue(entity);
-                }
-#if MULTITHREADING
-            }
-            finally
-            {
-                if (lockTaken) spLock.Exit();
-            }     
 #endif
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

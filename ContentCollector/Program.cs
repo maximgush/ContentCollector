@@ -18,10 +18,15 @@ namespace ContentCollector
 
             cBuild build = new cBuild();
 
-            build.ProductInternalName = "Category_C";
-            build.ProjectPath = @"F:\Transporter\Project";
+            //build.ProjectPath = @"F:\Transporter\Project";
+            build.ProjectPath = @"D:\Transporter\Trunk\Project";
 
-            build.AddRootContentEntity(typeof(cContentEntityGameTypesIni), @"F:\Transporter\Automation\Build System\config\Game_Types.ini");
+            cContentEntityGameTypesIni root = new cContentEntityGameTypesIni();
+            //root.Name =  @"F:\Transporter\Automation\Build System\config\Game_Types.ini";
+            root.Name = @"D:\Transporter\Tools\Automation\Build System\config\Game_Types.ini";
+            root.BuildType = "Category_C";
+
+            build.AddRootContentEntity(root);
 
             build.Rebuild();
 

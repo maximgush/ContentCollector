@@ -44,8 +44,6 @@ namespace ContentCollector
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public override void Parse(cBuild build)
         {
-            BuildType = build.ProductInternalName;
-
             StringBuilder stringBuilder = new StringBuilder(255);
 
             string GUI_Folder_Name = "pro";                 
