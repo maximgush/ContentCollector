@@ -30,7 +30,7 @@ namespace ContentCollector
             {
                 string carName = node.Attributes["name"].Value;
                 if (node.Attributes != null && carName != null)
-                    build.AddContentEntity(new cContentEntityTrafficCar(@"TrafficCar\cars\" + carName, this));
+                    build.AddContentEntity(new cContentEntityTrafficCar(@"TrafficCar\cars\" + carName, this, carName));
             }
             #endregion
 
@@ -39,7 +39,7 @@ namespace ContentCollector
             {
                 string carName = node.Attributes["name"].Value;
                 if (node.Attributes != null && carName != null)
-                    build.AddContentEntity(new cContentEntityTrafficCar(@"TrafficCar\cars\" + carName, this));
+                    build.AddContentEntity(new cContentEntityTrafficCar(@"TrafficCar\cars\" + carName, this, carName));
             }
             #endregion
 
