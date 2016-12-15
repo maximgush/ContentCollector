@@ -33,9 +33,6 @@ namespace ContentCollector
             string fileName = build.GetManglePath(Name);
             StringBuilder stringBuilder = new StringBuilder(255);
 
-            GetPrivateProfileString(build.ProductInternalName, "cars", "", stringBuilder, 255, fileName);
-            val = stringBuilder.ToString();
-
             // [Common]
             // BaseSoundBankName = "BaseCar"
             GetPrivateProfileString("Common", "BaseSoundBankName", "", stringBuilder, 255, fileName);
